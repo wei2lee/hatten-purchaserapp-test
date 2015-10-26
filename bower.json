@@ -1,0 +1,14 @@
+{
+  "name": "HelloIonic",
+  "private": "true",
+  "devDependencies": {
+    "ionic": "driftyco/ionic-bower#1.1.0"
+  },
+  "dependencies": {
+    "jquery": "~2.1.4",
+    "underscore": "~1.8.3",
+    "sprintf": "~1.0.3",
+    "ngCordova": "~0.1.20-alpha",
+    "animate.css": "~3.4.0"
+  }
+}
