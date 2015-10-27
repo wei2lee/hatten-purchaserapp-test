@@ -4,5 +4,9 @@
         'api', 
         'apiPrivateAppStore',
         'popup',
-        'localStorage']);
+        'localStorage',
+        'loading',
+        'Error',
+        'ErrorDomain',
+        'SemanticVersion']);
 }());

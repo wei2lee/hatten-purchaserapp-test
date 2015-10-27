@@ -1,166 +1,493 @@
 (function () {
     var _module = angular.module('api', []);
-
+    _module.config(function ($httpProvider) {
+        $httpProvider.interceptors.push(function ($q, App, ErrorDomain, Error) {
+            var filterUrls = [App.apiEndPoint, App.resourceEndPoint, App.authorizateApiEndPoint, App.privateAppStoreApiEndPoint];
+            function createErrorFromResponse(resp) {
+                var ret = null;
+                if (resp.data) {
+                    var json = resp.data;
+                    if (!ret && resp.data.hasOwnProperty('error')) {
+                        ret = new Error(
+                            json.error_description || (json.error),
+                            ErrorDomain.ServerInfracture,
+                            0
+                        );
+                    }
+                    if (!ret && resp.data.hasOwnProperty('ErrorCode')) {
+                        ret = new Error(
+                            json.Message || ('ErrorCode : ' + json.ErrorCode),
+                            ErrorDomain.ServerInfracture,
+                            json.ErrorCode
+                        );
+                    }
+                    if (!ret && resp.data.hasOwnProperty('Message')) {
+                        ret = new Error(
+                            json.Message || "Unable to interprete server reply",
+                            ErrorDomain.ClientHTTP,
+                            resp.status
+                        );
+                    }
+                    if (!ret) {
+                        ret = new Error(
+                            "Unable to interprete server reply",
+                            ErrorDomain.ClientHTTP,
+                            resp.status
+                        );
+                    }
+                } else {
+                    if (!ret && resp.data.status === 0) {
+                        ret = new Error(
+                            "Unable to connect to server",
+                            ErrorDomain.ClientHTTP,
+                            resp.status
+                        );
+                    }
+                    if (!ret) {
+                        ret = new Error(
+                            resp.statsText,
+                            ErrorDomain.ClientHTTP,
+                            resp.status
+                        );
+                    }
+                }
+                return ret;
+            }
+            return {
+                'request': function (config) {
+                    var url = config.url;
+                    var matchFilter = !!_.find(filterUrls, function (o) {
+                        return url.startsWith(o);
+                    });
+                    if (matchFilter) {
+                        console.log('request', config);
+                        config.headers.Authorization = 'Bearer ' + App.token.access_token;
+                        return config;
+                    } else {
+                        return config;
+                    }
+                },
+                'requestError': function (rejection) {
+                    var url = rejection.config.url;
+                    var matchFilter = !!_.find(filterUrls, function (o) {
+                        return url.startsWith(o);
+                    });
+                    if (matchFilter) {
+                        console.log('requestError', rejection);
+                        return $q.reject(rejection);
+                    } else {
+                        return $q.reject(rejection);
+                    }
+                },
+                'response': function (resp) {
+                    var url = resp.config.url;
+                    var matchFilter = !!_.find(filterUrls, function (o) {
+                        return url.startsWith(o);
+                    });
+                    if (matchFilter) {
+                        console.log('response', resp);
+                        return resp.data;
+                    } else {
+                        return resp;
+                    }
+                },
+                'responseError': function (resp) {
+                    var url = resp.config.url;
+                    var matchFilter = !!_.find(filterUrls, function (o) {
+                        return url.startsWith(o);
+                    });
+                    if (matchFilter) {
+                        var error = createErrorFromResponse(resp);
+                        console.log('responseError', error);
+                        return $q.reject(error);
+                    } else {
+                        return $q.reject(resp);
+                    }
+                }
+            };
+        });
+    });
     /* ==========================================================================
        API Service Base Class
        ========================================================================== */
-    _module.factory('apiBase', function ($q, $timeout, App) {
-        function apiBase(_values) {
+    _module.factory('apiBase', function ($q, $http, App, localStorage) {
+        function apiBase() {
             var _this = this;
-            this.values = _values;
-            this.apiService = apiService;
+            this.values = [];
             this._useCache = false;
         }
-        apiBase.prototype.useCache = function () {
-            this._useCache = true;
+        apiBase.prototype.useCache = function (b) {
+            this._useCache = b || true;
             return this;
         }
-        apiBase.prototype.getAll = function () {
-            return $q(function (resolve, reject) {
-                reject(createError('Not implemented'));
+        apiBase.prototype.add = function(key, val) {
+            var arr = val;
+            var _self = this;
+            if(!(val instanceof Array)) arr = [val];
+            _.each(arr, function(o){
+                _self.values.push(o); 
             });
         }
-        apiBase.prototype.getById = function (id) {
-            return $q(function (resolve, reject) {
-                reject(createError('Not implemented'));
+        apiBase.prototype.addOrUpdate = function(key, val)  {
+            var arr = val;
+            var _self = this;
+            if(!(val instanceof Array)) arr = [val];
+            _.each(arr, function(o){
+                var found = _.find(_self.values, function(o2){
+                    return o2[key] == o[key];
+                });
+                if(found) {
+                    _.extend(found, val);
+                }else{
+                    _self.values.push(val);
+                }
             });
         }
-        apiBase.prototype.processError = function (resp) {
-            var msg = null;
-            if (jqXHR.responseJSON != null) {
-                var json = jqXHR.responseJSON;
-                if (!msg && json.error) {
-                    msg = {
-                        domain: ErrorDomain.ServerInfracture,
-                        code: json.error,
-                        description: json.error_description || ('error:' + json.error)
-                    };
-                }
-                if (!msg && json.ErrorCode) {
-                    msg = {
-                        domain: ErrorDomain.ServerInfracture,
-                        code: json.ErrorCode,
-                        description: json.Message || ('ErrorCode:' + json.ErrorCode)
-                    };
-                }
-                if (!msg && json.Message) {
-                    msg = {
-                        domain: ErrorDomain.ServerInfracture,
-                        code: 0,
-                        description: json.Message
-                    };
-                }
-                if (!msg) {
-                    msg = {
-                        domain: ErrorDomain.ServerInfracture,
-                        code: 0,
-                        description: "Unable to interprete server reply"
-                    };
-                }
-            } else {
-                if (!msg && jqXHR.status == 0) {
-                    msg = {
-                        domain: ErrorDomain.ClientHTTP,
-                        code: 0,
-                        description: "Unable to connect to server"
-                    };
-                }
-                if (!msg && errorThrown != null) {
-                    msg = {
-                        domain: ErrorDomain.ClientHTTP,
-                        code: jqXHR.status,
-                        description: errorThrown
-                    };
-                }
-                console.log(jqXHR);
-                if (!msg) {
-                    msg = {
-                        domain: ErrorDomain.ClientHTTP,
-                        code: jqXHR.status,
-                        description: 'Unable to interprete server reply (' + jqXHR.status + ')'
-                    };
-                }
-            }
-            return msg;
+        apiBase.prototype.loadFromStorage = function(){
+            
         }
-        apiBase.prototype.processHtml = function (html) {
-
+        apiBase.prototype.saveToStorage = function(){
+            
         }
-
         return apiBase;
     });
-    _module.factory('apiWithTokenBase', function ($q, $timeout, apiServiceBase, apiToken) {
-        function apiBase() {}
-        apiBase.prototype = new apiServiceBase();
-        apiBase.prototype.withToken = function (createJQXHR) {
-            var defer = $q.defer();
-            var _self = this;
-            if (apiToken.apiService.token.access_token) {
-                createJQXHR().done(function (data, textStatus, jqXHR) {
-                    console.log('done@' + this.url);
-                    console.log(data);
-                    defer.resolve(data);
-                }).fail(function (jqXHR, textStatus, errorThrown) {
-                    if (jqXHR.status == 401) {
-                        console.log('fail@' + this.url);
-                        console.log('Re-token');
-                        return apiToken.token().then(function () {
-                            return createJQXHR().then(function (data, textStatus, jqXHR) {
-                                console.log('done@' + this.url);
-                                console.log(data);
-                                defer.resolve(data);
-                            });
-                        }).catch(function (error) {
-                            console.log('fail@' + this.url);
-                            console.log(error);
-                            defer.reject(error);
-                        });
-                    } else {
-                        console.log('fail@' + this.url);
-                        var error = _self.processError(jqXHR, textStatus, errorThrown);
-                        console.log(error);
-                        defer.reject(error);
-                    }
-                });
-            } else {
-                apiToken.token().then(function () {
-                    return createJQXHR().then(function (data, textStatus, jqXHR) {
-                        console.log('done@' + this.url);
-                        console.log(data);
-                        defer.resolve(data);
-                    });
-                }).catch(function (error) {
-                    console.log('fail@' + this.url);
-                    console.log(error);
-                    defer.reject(error);
-                });
-            }
-            return defer.promise;
-        }
-        return apiBase;
-    })
-    
-    _module.factory('apiToken', function($http,apiBase,App) {
+    _module.factory('apiToken', function ($http, $httpParamSerializer, localStorage, apiBase, App) {
         function api() {}
         api.prototype = new apiBase();
-        api.prototype.authorizate = function(){
-            var _self = this;
+        api.prototype.authorizate = function () {
             return $http({
-                url:App.EndPoint+'Token',
-                method:'POST',
-                data:{
-                    username:App.apiUserUsername,
-                    password:App.apiUserPassword,
-                    grant_type:'password'
+                method: 'POST',
+                url: App.authorizateApiEndPoint + 'Token',
+                data: $httpParamSerializer({
+                    username: App.apiUserUsername,
+                    password: App.apiUserPassword,
+                    grant_type: 'password'
+                }),
+                headers: {
+                    'Content-Type': 'application/x-www-form-urlencoded'
                 }
-            }).then(function(resp){
-                return resp.data;
-            }).catch(function(resp){
-                throw _self.processError(resp); 
+            }).then(function(data){
+                App.token = data;
+                localStorage.setObject('token',data);
             });
         }
         return new api();
     })
 
-
+    _module.factory('apiProject', function ($http, apiBase, App) {
+        function api() {}
+        api.prototype = new apiBase();
+        api.prototype.query = function () {
+            return $http.get(App.apiEndPoint + 'Project/GetAllProjects', {cache: this._useCache});
+        }
+        api.prototype.get = function (id) {
+            return $http.get(App.apiEndPoint + sprintf('AppProject/%s', id), {cache: this._useCache});
+        }
+        api.prototype.getRate = function (where) {
+            if(where.hasOwnProperty('Customer'))
+                return $http.get(App.apiEndPoint + sprintf('Rate/GetProject?iProjectID=%s&iCustomerID=%s', where.Project.ProjectId, where.Customer.CustomerId));
+            else
+                return this.get(where.Project.ProjectId).then(function(data){
+                    return {
+                        ProjectID:  data.RoadShow.RoadShowId,
+                        Total5: data.RoadShow.Star5,
+                        Total4: data.RoadShow.Star4,
+                        Total3: data.RoadShow.Star3,
+                        Total2: data.RoadShow.Star2,
+                        Total1: data.RoadShow.Star1,
+                        AverRate: data.RoadShow.StartAve,
+                        Total: data.RoadShow.StartTotal
+                    } ;
+                });
+        }
+        api.prototype.setRate = function (id) {
+            return $http.save(App.apiEndPoint + sprintf('Rate/UpdateProjectRate?iProjectId=%s&iCustomerID=%s&iRateValue=%s', data.Project.ProjectId, data.Customer.CustomerId, data.rateValue));
+        }
+        return new api();
+    })
+    
+    _module.factory('apiCustomerProjectFeedbackFormTemplate', function ($http, apiBase, App) {
+        function api() {}
+        api.prototype = new apiBase();
+        api.prototype.get = function () {
+            return $http.get(App.apiEndPoint + 'CustomerProjectFeedBackForm/GetFeedBackForm');
+        }
+        return new api();
+    })
+    
+    _module.factory('apiCustomerProjectFeedbackForm', function ($http, apiBase, App) {
+        function api() {}
+        api.prototype = new apiBase();
+        api.prototype.add = function (data) {
+            return $http.post(App.apiEndPoint + 'CustomerProjectFeedBackForm/UpdateFeedbackForm', {'params':data});
+        }
+        return new api();
+    })
+    
+    _module.factory('apiProgramFeedbackFormTemplate', function ($http, apiBase, App) {
+        function api() {}
+        api.prototype = new apiBase();
+        api.prototype.get = function () {
+            return $http.get(App.apiEndPoint + 'CustomerProjectFeedBackForm/GetProgramFeedBackForm');
+        }
+        return new api();
+    })
+    
+    _module.factory('apiProgramFeedbackForm', function ($http, apiBase, App) {
+        function api() {}
+        api.prototype = new apiBase();
+        api.prototype.add = function (data) {
+            return $http.post(App.apiEndPoint + 'CustomerProjectFeedBackForm/UpdateProgramFeedbackForm', {'params':data});
+        }
+        return new api();
+    })
+    
+    _module.factory('apiCustomerEventFeedbackFormTemplate', function ($http, apiBase, App) {
+        function api() {}
+        api.prototype = new apiBase();
+        api.prototype.get = function () {
+            return $http.get(App.apiEndPoint + 'CustomerEventFeedBackForm/GetFeedBackForm');
+        }
+        return new api();
+    })
+    
+    _module.factory('apiCustomerEventFeedbackForm', function ($http, apiBase, App) {
+        function api() {}
+        api.prototype = new apiBase();
+        api.prototype.add = function (data) {
+            return $http.post(App.apiEndPoint + 'CustomerEventFeedBackForm/UpdateFeedbackForm', {'params':data});
+        }
+        return new api();
+    })
+    
+    _module.factory('apiCustomerSysUserFeedBackFormTemplate', function ($http, apiBase, App) {
+        function api() {}
+        api.prototype = new apiBase();
+        api.prototype.get = function () {
+            return $http.get(App.apiEndPoint + 'CustomerSysUserFeedBackForm/GetFeedBackForm');
+        }
+        return new api();
+    })
+    
+    _module.factory('apiCustomerSysUserFeedBackForm', function ($http, apiBase, App) {
+        function api() {}
+        api.prototype = new apiBase();
+        api.prototype.add = function (data) {
+            return $http.post(App.apiEndPoint + 'CustomerSysUserFeedBackForm/UpdateFeedbackForm', {'params':data});
+        }
+        return new api();
+    })
+    
+    
+    _module.factory('apiCustomer', function ($http, apiBase, App, Error, ErrorDomain, localStorage) {
+        function api() {}
+        api.prototype = new apiBase();
+        api.prototype.login = function (where) {
+            if(!data.email || !data.pass) return $q.reject(new Error('Username and password must not empty'));
+            return $http.get(App.apiEndPoint + sprintf('AppCustomer/GetByEmailAndPass?email=%s&pass=%s', where.email, where.pass)).then(function(data){
+                if(data == null) throw new Error('Username doesn\'t match with password');
+                else{
+                    return data;
+                    App.user = data;
+                    localStorage.setObject('user', data);
+                } 
+            });
+        }
+        api.prototype.add = function (data) {
+            return $http.post(App.apiEndPoint + 'AppCustomer/Add', {'params':data});
+        }
+        api.prototype.save = function (data) {
+            return $http.post(App.apiEndPoint + sprintf('AppCustomer/%s/Edit', data.IC), {'params':data});
+        }
+        api.prototype.forgetPassword = function(data) {
+            return $http.get(App.apiEndPoint + sprintf('AppEmail/ForgetPassWord?email=%s', data.Customer.Email));
+        }
+        return new api();
+    })
+    
+    _module.factory('apiUnit', function ($http, apiBase, App) {
+        function api() {}
+        api.prototype = new apiBase();
+        api.prototype.query = function (where) {
+            return $http.get(App.apiEndPoint + sprintf('AppCustomer/%s/Units', where.Customer.IC));
+        }
+        return new api();
+    })
+    
+    _module.factory('apiConsultant', function ($http, apiBase, App,Error,$q) {
+        function api() {}
+        api.prototype = new apiBase();
+        api.prototype.query = function (where) {
+            if(where.hasOwnProperty('Customer'))
+                return $http.get(App.apiEndPoint + sprintf('AppCustomer/%s/Agents', where.Customer.IC));
+            else if(where.hasOwnProperty('Project'))
+                return $http.get(App.apiEndPoint + sprintf('AppUser/GetByProjectId?iProjectID=%s', where.Project.ProjectId));
+            else if(where.hasOwnProperty('AssociateUnit'))
+                return $http.get(App.apiEndPoint + sprintf('AppUser/GetByUnitId?iUnitID=%s', where.AssociateUnit.UnitId));
+            else{
+                return $q.reject(new Error('Unimplemented'));
+            }
+        }
+        api.prototype.get = function(id) {
+            return $http.get(App.apiEndPoint + sprintf('AppUser/%s', id));
+        }
+        api.prototype.getRate = function (where) {
+            if(where.hasOwnProperty('Customer'))
+                return $http.get(App.apiEndPoint + sprintf('Rate/GetEventRate?iEventId=%s&iCustomerID=%s', where.Event.EventId, where.Customer.CustomerId));
+            else
+                return this.get(where.Event.EventId).then(function(data){
+                    return {
+                        SystemUserID:  data.RoadShow.RoadShowId,
+                        Total5: data.RoadShow.Star5,
+                        Total4: data.RoadShow.Star4,
+                        Total3: data.RoadShow.Star3,
+                        Total2: data.RoadShow.Star2,
+                        Total1: data.RoadShow.Star1,
+                        AverRate: data.RoadShow.StartAve,
+                        Total: data.RoadShow.StartTotal
+                    } ;
+                });
+        }
+        api.prototype.setRate = function (id) {
+            return $http.save(App.apiEndPoint + sprintf('Rate/UpdateEventRate?iEventId=%s&iCustomerID=%s&iRateValue=%s', data.Consultant.SysUserId, data.Customer.CustomerId, data.rateValue));
+        }
+        return new api();
+    })
+    
+    _module.factory('apiConstruction', function ($http, apiBase, App,Error,$q) {
+        function api() {}
+        api.prototype = new apiBase();
+        api.prototype.query = function (where) {
+            if(where.hasOwnProperty('Project'))
+                return $http.get(App.apiEndPoint + sprintf('AppProject/GetContructions?projectid=%s', where.Project.ProjectId));
+            else{
+                return $q.reject(new Error('Unimplemented'));
+            }
+        }
+        return new api();
+    })
+    
+    _module.factory('apiWhatsNew', function ($http, apiBase, App,Error,$q) {
+        function api() {}
+        api.prototype = new apiBase();
+        api.prototype.query = function () {
+            return $http.get(App.apiEndPoint + 'WhatNews/GetAllWhatNews');
+        }
+        api.prototype.get = function (id) {
+            return $http.get(App.apiEndPoint + sprintf('WhatNews/GetWhatNewsById?eventid=%s', id));
+        }
+        api.prototype.attemp = function(data) {
+            return $http.get(App.apiEndPoint + sprintf('Rate/AttendEvent?iEventId=%s&iCustomerID=%s', data.Event.EventId, data.Customer.CustomerId));
+        }
+        api.prototype.unattemp = function(data) {
+            return $http.get(App.apiEndPoint + sprintf('Rate/UnAttendEvent?iEventId=%s&iCustomerID=%s', data.Event.EventId, data.Customer.CustomerId));
+        }
+        api.prototype.attemp = function(data) {
+            return $http.get(App.apiEndPoint + sprintf('Rate/AttendEvent?iEventId=%s&iCustomerID=%s', data.Event.EventId, data.Customer.CustomerId));
+        }
+        api.prototype.unattemp = function(data) {
+            return $http.get(App.apiEndPoint + sprintf('Rate/UnAttendEvent?iEventId=%s&iCustomerID=%s', data.Event.EventId, data.Customer.CustomerId));
+        }
+        api.prototype.getRate = function (where) {
+            if(where.hasOwnProperty('Customer'))
+                return $http.get(App.apiEndPoint + sprintf('Rate/GetEventRate?iEventId=%s&iCustomerID=%s', where.Event.EventId, where.Customer.CustomerId));
+            else
+                return this.get(where.Event.EventId).then(function(data){
+                    return {
+                        RoadShowId:  data.RoadShow.RoadShowId,
+                        Total5: data.RoadShow.Star5,
+                        Total4: data.RoadShow.Star4,
+                        Total3: data.RoadShow.Star3,
+                        Total2: data.RoadShow.Star2,
+                        Total1: data.RoadShow.Star1,
+                        AverRate: data.RoadShow.StartAve,
+                        Total: data.RoadShow.StartTotal
+                    } ;
+                });
+        }
+        api.prototype.saveRate = function (id) {
+            return $http.save(App.apiEndPoint + sprintf('Rate/UpdateEventRate?iEventId=%s&iCustomerID=%s&iRateValue=%s', data.Event.EventId, data.Customer.CustomerId, data.rateValue));
+        }
+        return new api();
+    })
+    
+    _module.factory('apiVoucher', function ($http, apiBase, App,Error,$q) {
+        function api() {}
+        api.prototype = new apiBase();
+        api.prototype.query = function () {
+            return $http.get(App.apiEndPoint + 'WhatNews/GetAllVoucher');
+        }
+        api.prototype.get = function (id) {
+            return $http.get(App.apiEndPoint + sprintf('WhatNews/GetWhatNewsById?eventid=%s', id));
+        }
+        api.prototype.getRate = function (where) {
+            if(where.hasOwnProperty('Customer'))
+                return $http.get(App.apiEndPoint + sprintf('Rate/GetEventRate?iEventId=%s&iCustomerID=%s', where.Event.EventId, where.Customer.CustomerId));
+            else
+                return this.get(where.Event.EventId).then(function(data){
+                    return {
+                        RoadShowId:  data.RoadShow.RoadShowId,
+                        Total5: data.RoadShow.Star5,
+                        Total4: data.RoadShow.Star4,
+                        Total3: data.RoadShow.Star3,
+                        Total2: data.RoadShow.Star2,
+                        Total1: data.RoadShow.Star1,
+                        AverRate: data.RoadShow.StartAve,
+                        Total: data.RoadShow.StartTotal
+                    } ;
+                });
+        }
+        api.prototype.saveRate = function (id) {
+            return $http.save(App.apiEndPoint + sprintf('Rate/UpdateEventRate?iEventId=%s&iCustomerID=%s&iRateValue=%s', data.Event.EventId, data.Customer.CustomerId, data.rateValue));
+        }
+        return new api();
+    })
+    
+    _module.factory('apiEvent', function ($http, apiBase, App,Error,$q) {
+        function api() {}
+        api.prototype = new apiBase();
+        api.prototype.query = function () {
+            return $http.get(App.apiEndPoint + 'WhatNews/GetAllEvent');
+        }
+        api.prototype.get = function (id) {
+            return $http.get(App.apiEndPoint + sprintf('WhatNews/GetWhatNewsById?eventid=%s', id));
+        }
+        api.prototype.attemp = function(data) {
+            return $http.get(App.apiEndPoint + sprintf('Rate/AttendEvent?iEventId=%s&iCustomerID=%s', data.Event.EventId, data.Customer.CustomerId));
+        }
+        api.prototype.unattemp = function(data) {
+            return $http.get(App.apiEndPoint + sprintf('Rate/UnAttendEvent?iEventId=%s&iCustomerID=%s', data.Event.EventId, data.Customer.CustomerId));
+        }
+        api.prototype.getRate = function (where) {
+            if(where.hasOwnProperty('Customer'))
+                return $http.get(App.apiEndPoint + sprintf('Rate/GetEventRate?iEventId=%s&iCustomerID=%s', where.Event.EventId, where.Customer.CustomerId));
+            else
+                return this.get(where.Event.EventId).then(function(data){
+                    return {
+                        RoadShowId:  data.RoadShow.RoadShowId,
+                        Total5: data.RoadShow.Star5,
+                        Total4: data.RoadShow.Star4,
+                        Total3: data.RoadShow.Star3,
+                        Total2: data.RoadShow.Star2,
+                        Total1: data.RoadShow.Star1,
+                        AverRate: data.RoadShow.StartAve,
+                        Total: data.RoadShow.StartTotal
+                    } ;
+                });
+        }
+        api.prototype.saveRate = function (id) {
+            return $http.save(App.apiEndPoint + sprintf('Rate/UpdateEventRate?iEventId=%s&iCustomerID=%s&iRateValue=%s', data.Event.EventId, data.Customer.CustomerId, data.rateValue));
+        }
+        return new api();
+    })
+    
+    
+    _module.factory('apiCountry', function ($http, apiBase, App,Error,$q) {
+        function api() {}
+        api.prototype = new apiBase();
+        api.prototype.query = function () {
+            return $http.get(App.apiEndPoint + 'Country');
+        }
+        return new api();
+    })
 }());

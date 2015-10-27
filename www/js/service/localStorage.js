@@ -1,6 +1,6 @@
 (function () {
     var _module = angular.module('localStorage', []);
-    _module.factory('localStorage', function($window){
+    _module.service('localStorage', function($window){
         var ret = {
             setInt:function(key,val) {
                 if(val === undefined || val === null) {

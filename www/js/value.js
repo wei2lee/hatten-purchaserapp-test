@@ -4,8 +4,18 @@
         device:{
             version:'0.0.0'
         },
-        privateAppStoreApiEndPoint:'',
-        apiEndPoint:'',
-        resourceEndPoint:'',
+        token:{
+            
+        },
+        privateAppStoreApiEndPoint:'http://infradigital.com.my/appstore/cms/resources/',
+        apiEndPoint:'http://103.9.149.59:8034/api/',
+        authorizateApiEndPoint:'http://103.9.149.59:8034/',
+        resourceEndPoint:'http://103.9.149.59:8034/data/HATT/',
+        apiUserUsername:'90731C01@hatt',
+        apiUserPassword:'F2568907B18C',
+        placeholderGeneralLG: 'img/placeholder_general_lg.png',
+        placeholderGeneralXS: 'img/placeholder_general_sm.png',
+        placeholderAvatarLG: 'img/placeholder_people_lg.png',
+        placeholderAvatarXS: 'img/placeholder_people_sm.png',
     });
 }());

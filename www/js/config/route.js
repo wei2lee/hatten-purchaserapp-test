@@ -30,6 +30,26 @@
                 }
             })
         
+        .state('app.projects', {
+                url: '/projects',
+                views: {
+                    'menuContent': {
+                        templateUrl: 'templates/content/ProjectLarges.html',
+                        controller: 'ProjectsCtrl'
+                    }
+                }
+            })
+        
+        .state('app.project', {
+                url: '/project/{id}',
+                views: {
+                    'menuContent': {
+                        templateUrl: 'templates/content/Project.html',
+                        controller: 'ProjectCtrl'
+                    }
+                }
+            })
+        
         .state('app.construction-projects', {
                 url: '/construction-projects',
                 views: {
@@ -90,7 +110,7 @@
                 }
             })
         
-        $urlRouterProvider.otherwise('/app/whatsnew');
+        $urlRouterProvider.otherwise('/app/projects');
     });
 
 

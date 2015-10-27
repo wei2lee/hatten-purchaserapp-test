@@ -1,0 +1,116 @@
+/* ==========================================================================
+   Utility
+   ========================================================================== */
+
+@mixin create-color($word, $css) {
+    .#{$word}-light {
+        #{$css}:$light;   
+    }
+    .#{$word}-stable {
+        #{$css}:$stable;   
+    }
+    .#{$word}-positive {
+        #{$css}:$positive;   
+    }
+    .#{$word}-calm {
+        #{$css}:$calm;   
+    }
+    .#{$word}-balanced {
+        #{$css}:$balanced;   
+    }
+    .#{$word}-energized {
+        #{$css}:$energized;   
+    }
+    .#{$word}-assertive {
+        #{$css}:$assertive;   
+    }
+    .#{$word}-royal {
+        #{$css}:$royal;   
+    }
+    .#{$word}-dark {
+        #{$css}:$dark;   
+    }
+}
+
+@mixin create-margin($word, $value) {
+    .margin-#{$word} {
+        margin:$value;   
+    }
+
+    .margin-#{$word}-top {
+        margin-top:$value;   
+    }
+
+    .margin-#{$word}-bottom {
+        margin-bottom:$value;   
+    }
+
+    .margin-#{$word}-left {
+        margin-left:$value;   
+    }
+
+    .margin-#{$word}-right {
+        margin-right:$value;   
+    }
+
+    .margin-#{$word}-horizontal {
+        margin-left: $value;
+        margin-right: $value;
+    }
+
+    .margin-#{$word}-vertical {
+        margin-top: $value;
+        margin-bottom: $value;
+    }
+}
+
+@mixin create-padding($word, $value) {
+    .padding-#{$word} {
+        padding:$value;   
+    }
+
+    .padding-#{$word}-top {
+        padding-top:$value;   
+    }
+
+    .padding-#{$word}-bottom { 
+        padding-bottom:$value;   
+    }
+
+    .padding-#{$word}-left {
+        padding-left:$value;   
+    }
+
+    .padding-#{$word}-right {
+        padding-right:$value;   
+    }
+
+    .padding-#{$word}-horizontal {
+        padding-left: $value;
+        padding-right: $value;
+    }
+
+    .padding-#{$word}-vertical {
+        padding-top: $value;
+        padding-bottom: $value;
+    }
+}
+
+@include create-color('bg', background-color);
+@include create-color('text', color);
+
+@include create-padding('0', 0px);
+@include create-padding('xxs', 5px);
+@include create-padding('xs', 10px);
+@include create-padding('md', 20px);
+@include create-padding('lg', 40px);
+@include create-padding('xlg', 60px);
+@include create-padding('xxlg', 90px);
+
+@include create-margin('0', 0px);
+@include create-margin('xxs', 5px);
+@include create-margin('xs', 10px);
+@include create-margin('md', 20px);
+@include create-margin('lg', 40px);
+@include create-margin('xlg', 60px);
+@include create-margin('xxlg', 90px);

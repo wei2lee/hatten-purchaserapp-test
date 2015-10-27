@@ -1,6 +1,8 @@
 {
     "jscodehints.detectedExclusions": [
         "/Users/infradesign/Desktop/cordova/dev/hatten/purchaserapp/src/hatten-purchaserapp-test/www/js/service/privateAppStoreApi.js",
-        "/Users/infradesign/Desktop/cordova/dev/hatten/purchaserapp/src/hatten-purchaserapp-test/www/js/controller/controller.js"
+        "/Users/infradesign/Desktop/cordova/dev/hatten/purchaserapp/src/hatten-purchaserapp-test/www/js/controller/controller.js",
+        "/Users/infradesign/Desktop/cordova/dev/hatten/purchaserapp/src/hatten-purchaserapp-test/www/js/filter/relativeResource.js",
+        "/Users/infradesign/Desktop/cordova/dev/hatten/purchaserapp/src/hatten-purchaserapp-test/www/js/filter/filter.js"
     ]
 }

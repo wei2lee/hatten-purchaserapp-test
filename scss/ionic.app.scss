@@ -20,7 +20,22 @@ $ionicons-font-path: "../lib/ionic/fonts" !default;
 
 // Include all of Ionic
 @import "www/lib/ionic/scss/ionic";
+@import "u/u";
 
-
-@import "content/item";
     
+ion-list {
+    .item.item-image {
+        >div {
+            background-repeat:no-repeat;
+            background-size:cover;
+            background-position:center;
+            transition:background-image 0.3s;
+        }
+    }
+    .item.item-icon-right {
+        .icon-left-border {
+            border-left: solid 1px rgb(221, 221, 221);
+            padding-left: 10px;
+        }
+    }
+}

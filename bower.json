@@ -9,6 +9,8 @@
     "underscore": "~1.8.3",
     "sprintf": "~1.0.3",
     "ngCordova": "~0.1.20-alpha",
-    "animate.css": "~3.4.0"
+    "animate.css": "~3.4.0",
+    "angular-http-auth": "~1.2.2",
+    "angular-bind-html-compile": "~1.1.0"
   }
 }

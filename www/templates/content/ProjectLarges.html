@@ -1,0 +1,26 @@
+<ion-view title="Properties" id="projects">
+    <ion-content class="has-header">
+        <ion-refresher pulling-text="Pull to refresh" on-refresh="actionRefresh()">
+        </ion-refresher>
+        <ion-list>
+            <div class="card" collection-repeat="item in items" 
+                 item-render-buffer="4"
+                 item-width="getItemWidth($index)" 
+                 item-height="getItemHeight($index, true)"
+                 ng-style="{height: getItemHeight($index, false), left:0, right:0}"
+                 ng-click="actionItemClick($index)"
+                 >
+                <div class="item item-image">
+                    <div lowres='{{item.PictureLargeResourceKey}}' 
+                         hires='{{item.PictureLargeResourceKey}}' 
+                         ng-style="{width: getImageWidth($index), height: getImageHeight($index), 'background-image':'url('+(null | relativeResource)+')'}">
+                    </div>
+                </div>
+                <div class="item item-icon-right">
+                    <p>{{item.Name}}</p>
+                    <a ng-click="actionShare($index)"><i class="icon ion-android-share-alt icon-left-border"></i></a>
+                </div>
+            </div>
+        </ion-list>
+    </ion-content>
+</ion-view>
