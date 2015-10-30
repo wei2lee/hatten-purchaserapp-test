@@ -1,0 +1,129 @@
+.rate-widget {
+    max-width:550px;
+    @include display-flex;
+    @include flex-direction(column);
+    li {
+        list-style: none;   
+        display:list-item;
+    }
+    .rate-form {
+        text-align:center;
+        .rate-form-title {
+            margin-bottom:  $rate-review-xs-content-padding*2; 
+            font-size: $rate-review-xs-font-size * 1.2;
+        }
+        .rate-form-field {
+            @include display-flex;
+            @include justify-content(center);
+            @include flex-direction(row);
+            li {  
+                font-size:$rate-review-lg-font-size;
+                padding-left:$rate-review-lg-content-padding;
+                padding-right:$rate-review-lg-content-padding;
+                &.disabled {
+                    opacity:0.3;   
+                }
+                i {
+                    color:#ffcf00;
+                }
+            }
+        }
+    }
+    .rate-review {
+        padding:$rate-review-container-padding;
+        height:130px;
+        display:flex;
+        font-size:$rate-review-xss-font-size;
+
+        .text-section {
+            padding-left:$rate-review-container-padding;
+            padding-right:$rate-review-container-padding;
+            width:100%;
+            @include display-flex();
+            @include flex-grow(1,1,auto);
+            @include flex-direction(column);
+            @include justify-content(center);
+
+            .average-rate-number {
+                text-align: center;
+                font-size:$rate-review-lg-font-size;
+                margin-bottom:$rate-review-xs-content-padding;
+            }
+
+            .average-rate-number-star {
+                display:flex;
+                justify-content: center;
+                li:not(last-child) {
+                    padding-left:$rate-review-xss-content-padding;
+                }
+                margin-bottom:-2px;
+            }
+
+            .average-rate-number-people {
+                display:flex;
+                justify-content: center;
+                i {
+                    position:relative;
+                    top:0px;
+                    padding-right:$rate-review-xss-content-padding/2;
+                }
+                span {
+                    padding-bottom:$rate-review-xss-content-padding;
+                }
+            }
+        }
+
+        .chart-section {
+            padding-left:$rate-review-container-padding;
+            padding-right:$rate-review-container-padding;
+            width:100%;
+            flex-grow: 1;
+            flex-shrink: 1;
+            display:flex;
+            flex-direction: column;
+            justify-content: center;
+            li {
+                display:flex;
+                .number-star-label {
+                    flex-shrink: 0;
+
+                    span {
+                        padding-right: $rate-review-xs-content-padding;  
+                    }
+                }
+                .number-star-value {
+                    width:100%;
+                    flex-grow:1;
+                    position:relative;
+                    div {
+                        transition:width 0.3s;
+                        height:20px;
+                        position:relative;
+                        min-width:15px;
+                    }
+                    span {
+                        position:absolute;   
+                        left:4px;
+                        top:1px;
+                    }
+                }
+            }
+            //change from nth-child to nth-of-type http://stackoverflow.com/questions/27127879/nth-child-not-working-on-iossafari-8
+            li:nth-of-type(1) .number-star-value div{
+                background-color:#87b02d;
+            }
+            li:nth-of-type(2) .number-star-value div{
+                background-color:#a2cc02;
+            }
+            li:nth-of-type(3) .number-star-value div{
+                background-color:#ffcf00;
+            }
+            li:nth-of-type(4) .number-star-value div{
+                background-color:#ff9e01;
+            }
+            li:nth-of-type(5) .number-star-value div{
+                background-color:#ff6f32;
+            }
+        }
+    }
+}

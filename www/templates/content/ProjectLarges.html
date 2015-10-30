@@ -4,16 +4,16 @@
         </ion-refresher>
         <ion-list>
             <div class="card" collection-repeat="item in items" 
-                 item-render-buffer="4"
+                 item-render-buffer="2"
                  item-width="getItemWidth($index)" 
                  item-height="getItemHeight($index, true)"
                  ng-style="{height: getItemHeight($index, false), left:0, right:0}"
                  ng-click="actionItemClick($index)"
                  >
                 <div class="item item-image">
-                    <div lowres='{{item.PictureLargeResourceKey}}' 
-                         hires='{{item.PictureLargeResourceKey}}' 
-                         ng-style="{width: getImageWidth($index), height: getImageHeight($index), 'background-image':'url('+(null | relativeResource)+')'}">
+                    <div tiny-background-image-lowres='{{item.PictureSmallResourceKey}}' 
+                         tiny-background-image-hires='{{item.PictureLargeResourceKey}}' 
+                         ng-style="{width: getImageWidth($index), height: getImageHeight($index), 'background-image':'url('+(item.PictureSmallResourceKey | relativeResource)+')'}">
                     </div>
                 </div>
                 <div class="item item-icon-right">

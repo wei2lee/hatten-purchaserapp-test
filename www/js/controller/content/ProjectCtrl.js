@@ -30,6 +30,16 @@
             
         }
         
+        $scope.actionGallery = function() {
+            u.Intent.data = _.map($scope.item.ProjectPhotos , function(o){
+                return {
+                    HiRes: null,
+                    LowRes: o.ProjectPhotoResourceKey
+                } 
+            });
+            u.$state.go('app.gallery');
+        }
+        
         $scope.getImageWidth = function(index) {
             var padding = 20;
             return ($scope.$ioncontent.width() - padding) + 'px';

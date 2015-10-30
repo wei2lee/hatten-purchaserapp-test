@@ -96,6 +96,18 @@
     }
 }
 
+@mixin create-width() {
+    @for $i from 0 through 100 {
+        .width-#{$i} { width:0%+$i; }
+    }
+}
+
+@mixin create-height() {
+    @for $i from 0 through 100 {
+        .height-#{$i} { width:0%+$i; }
+    }
+}
+
 @include create-color('bg', background-color);
 @include create-color('text', color);
 
@@ -114,3 +126,11 @@
 @include create-margin('lg', 40px);
 @include create-margin('xlg', 60px);
 @include create-margin('xxlg', 90px);
+
+@include create-width();
+@include create-height();
+
+img.img-full-responsive {
+    width:100%;
+    height:auto;
+}

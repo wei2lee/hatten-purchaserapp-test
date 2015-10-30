@@ -1,0 +1,11 @@
+<ion-view view-title="Location" id="location">
+    <ion-pane>
+        <ion-content class="has-header" scroll="false">
+            <div class="iframe-container">
+                <iframe ng-onload="iframeOnLoad()" id='map' width="100%" height="100%" frameborder="0" style="border:0" ng-src="{{url}}" ng-if="url">
+                </iframe>
+                <p class="padding" ng-if="!url">Location is not available</p>
+            </div>
+        </ion-content>
+    </ion-pane>
+</ion-view>

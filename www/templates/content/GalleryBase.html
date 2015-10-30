@@ -1,0 +1,20 @@
+<ion-view title="Gallery" id="gallery">
+    <ion-content class="has-header">
+        <ion-list>
+            <div class="card" collection-repeat="item in items" 
+                 item-render-buffer="2"
+                 item-width="getItemWidth($index)" 
+                 item-height="getItemHeight($index, true)"
+                 ng-style="{height: getItemHeight($index, false), left:0, right:0}"
+                 ng-click="actionItemClick($index)"
+                 >
+                <div class="item item-image">
+                    <div tiny-background-image-lowres='{{item.HighRes}}' 
+                         tiny-background-image-hires='{{item.LowRes}}' 
+                         ng-style="{width: getImageWidth($index), height: getImageHeight($index), 'background-image':'url('+(item.LowRes | relativeResource)+')'}">
+                    </div>
+                </div>
+            </div>
+        </ion-list>
+    </ion-content>
+</ion-view>

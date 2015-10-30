@@ -50,6 +50,26 @@
                 }
             })
         
+        .state('app.consultants', {
+                url: '/consultants',
+                views: {
+                    'menuContent': {
+                        templateUrl: 'templates/content/Consultants.html',
+                        controller: 'ConsultantsCtrl'
+                    }
+                }
+            })
+        
+        .state('app.consultant', {
+                url: '/consultant/{id}',
+                views: {
+                    'menuContent': {
+                        templateUrl: 'templates/content/Consultant.html',
+                        controller: 'ConsultantCtrl'
+                    }
+                }
+            })
+        
         .state('app.construction-projects', {
                 url: '/construction-projects',
                 views: {
@@ -106,6 +126,28 @@
                     'menuContent': {
                         templateUrl: 'templates/content/AboutUs.html',
                         controller: 'AboutUsCtrl'
+                    }
+                }
+            })
+        
+        
+        
+        .state('app.location', {
+                url: '/location/{lot}/{lat}',
+                views: {
+                    'menuContent': {
+                        templateUrl: 'templates/content/LocationBase.html',
+                        controller: 'LocationBaseCtrl'
+                    }
+                }
+            })
+        
+        .state('app.gallery', {
+                url: '/gallery',
+                views: {
+                    'menuContent': {
+                        templateUrl: 'templates/content/GalleryBase.html',
+                        controller: 'GalleryBaseCtrl'
                     }
                 }
             })

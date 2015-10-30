@@ -1,0 +1,38 @@
+<div class="rate-widget">
+    <div class="rate-form">
+        <div class="rate-form-title">{{rate.title}}</div>
+        <div class="rate-form-field">
+            <li ng-repeat="i in [1,2,3,4,5]" ng-class="{disabled:(rate.apiUser.getUser()==null)}" ng-click="rate.setRate($index+1)">
+                <i class="icon" ng-class="{'ion-ios-star-outline':(rate.rate < i), 'ion-ios-star':(rate.rate >= i)}"></i>
+            </li>
+        </div>
+    </div>
+    <div class="rate-review " ng-if="rate.review">
+        <div class="text-section">
+            <div class="average-rate-number">{{rate.review.averageRate | number : 1}}</div>
+            <div class="average-rate-number-star">
+                <li ng-repeat="i in [1,2,3,4,5]">
+                    <i class="icon" ng-class="{'ion-ios-star-outline':(rate.review.averageRate < (i-0.66)), 'ion-ios-star-half':(rate.review.averageRate >= (i-0.66) && rate.review.averageRate < i), 'ion-ios-star':(rate.review.averageRate >= i)}"></i>
+                </li>
+            </div>
+            <div class="average-rate-number-people">
+                <i class="icon ion-star"></i>
+                <span>{{rate.review.totalPeople}} Total</span>
+            </div>
+        </div>
+        <div  class="chart-section">
+            <li ng-class="{{'li-'+$index}}" ng-repeat="totalRatePerStar in rate.review.totalRatePerStars track by $index">
+                <span class="number-star-label">
+                    <i class="icon ion-star"></i>
+                    <span>{{5-$index}}</span>
+                </span>
+                <span class="number-star-value">
+                    <div ng-style="{'width':rate.review.getChartWidth($index)}"></div>
+                    <span>
+                        {{totalRatePerStar}}
+                    </span>
+                </span>
+            </li>
+        </div>
+    </div>
+</div>

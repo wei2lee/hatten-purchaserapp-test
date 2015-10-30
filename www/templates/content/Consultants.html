@@ -1,0 +1,29 @@
+<ion-view id="consultants" title="Consultants">
+    <ion-content class="has-header">
+        <ion-refresher pulling-text="Pull to refresh" on-refresh="actionRefresh()">
+        </ion-refresher>
+        <ion-list>
+            <div class="item item-input-inset padding-0-vertical">
+                <label class="item-input-wrapper">
+                    <input type="text" ng-model="filter.searchText" placeholder="Name, Contact">
+                </label>
+                <button class="button button-dark button-clear" modal-select modal-title="Select a Project" ng-model="filter.project" options="projects">
+                    Filter
+                    <div class="option">
+                        <h2>{{option.Name}}</h2>
+                    </div>
+                </button>
+            </div>
+            <div class="item"  ng-if="filter.toString()">
+                <small>Filters: {{filter.toString()}}</small>
+            </div>
+            <div class="card" collection-repeat="item in items" item-render-buffer="8" item-width="getItemWidth($index)" item-height="getItemHeight($index, true)" ng-style="{height: getItemHeight($index, false), left:0, right:0}" ng-click="actionItemClick($index)">
+                <a ng-href="#/app/consultant/{{item.UserId}}" class="item item-icon-left item-avatar-left">
+                    <img ng-src="{{item.AvatarResourceKey | relativeResource : 'AvatarSmall'}}">
+                    <p><strong>{{item.FullName}}</strong></p>
+                    <p ng-if="item.Phones | firstValidElement"><small>{{item.Phones | firstValidElement : '-' }}</small></p>
+                    <p ng-if="item.Address"><small>{{item.Address}}</small></p>
+                </a>
+        </ion-list>
+    </ion-content>
+</ion-view>

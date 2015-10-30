@@ -8,5 +8,7 @@
         'loading',
         'Error',
         'ErrorDomain',
-        'SemanticVersion']);
+        'SemanticVersion',
+        'jett.ionic.filter.bar'
+        ]);
 }());

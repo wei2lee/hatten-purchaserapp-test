@@ -1,6 +1,6 @@
 {
   "name": "hatten-purchaserapp-test",
-  "app_id": "",
+  "app_id": "31f6e501",
   "gulpStartupTasks": [
     "sass",
     "watch"

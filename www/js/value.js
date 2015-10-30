@@ -13,9 +13,14 @@
         resourceEndPoint:'http://103.9.149.59:8034/data/HATT/',
         apiUserUsername:'90731C01@hatt',
         apiUserPassword:'F2568907B18C',
+        googleApiKey:'AIzaSyAZU6hYAxURw1ewJYV4OMLitTYd01xPb0I',
         placeholderGeneralLG: 'img/placeholder_general_lg.png',
         placeholderGeneralXS: 'img/placeholder_general_sm.png',
         placeholderAvatarLG: 'img/placeholder_people_lg.png',
         placeholderAvatarXS: 'img/placeholder_people_sm.png',
+    });
+    _module.value('Intent', {
+        
+        
     });
 }());

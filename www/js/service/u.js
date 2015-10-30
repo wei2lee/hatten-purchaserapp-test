@@ -12,7 +12,8 @@
                     $timeout,
                     $interval,
                     $state,
-                    $window
+                    $window,
+                    Intent
                    ){
         var _self = this;
         _self.Error = Error;
@@ -26,6 +27,7 @@
         _self.$interval = $interval;
         _self.$state = $state;
         _self.$window = $window;
+        _self.Intent = Intent;
         return _self;
     });
 }());
