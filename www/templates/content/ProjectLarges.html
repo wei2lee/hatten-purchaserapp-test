@@ -2,10 +2,35 @@
     <ion-content class="has-header">
         <ion-refresher pulling-text="Pull to refresh" on-refresh="actionRefresh()">
         </ion-refresher>
+        <div class="item item-input-inset padding-0-vertical">
+            <label class="item-input-wrapper">
+                <input class="width-100" type="text" ng-model="filter.searchText" placeholder="Project Name, Address">
+            </label>
+            <button class="button button-dark button-clear" 
+               modal-select 
+               header-footer-class="bar-positive"
+               modal-title="Select a Project Type" 
+               ng-model="filter.propertyTypeDesc" 
+               options="filter.propertyTypeDescOptions">
+                Filter
+                <div class="option">
+                    <h2>{{option}}</h2>
+                </div>
+            </button>
+        </div>
+        <div class="item padding-xs-vertical" ng-if="filter.toString()">
+            <small>Filters: {{filter.toString()}}</small>
+        </div>
+        <div ng-if="getShowNoResultsFound()" class="ion-content-noresultsfound-container">
+            <strong class="ion-content-noresultsfound">No Results Found.</strong>
+        </div>
+        <div ng-if="getShowLoading()" class="ion-content-loading-container">
+            <strong class="ion-content-loading">Loading...</strong>
+        </div>
         <ion-list>
-            <div class="card" collection-repeat="item in items" 
+            <div class="card" collection-repeat="item in getItems()" 
                  item-render-buffer="2"
-                 item-width="getItemWidth($index)" 
+                 item-width="getItemWidth($index, false)" 
                  item-height="getItemHeight($index, true)"
                  ng-style="{height: getItemHeight($index, false), left:0, right:0}"
                  ng-click="actionItemClick($index)"
@@ -18,9 +43,13 @@
                 </div>
                 <div class="item item-icon-right">
                     <p>{{item.Name}}</p>
+                    <small class="block-nowrap-ellipsis font-size-75">
+                        {{item.Location}}
+                    </small>
                     <a ng-click="actionShare($index)"><i class="icon ion-android-share-alt icon-left-border"></i></a>
                 </div>
             </div>
         </ion-list>
+        <div class="ion-content-scroll-bottom-filler"></div>
     </ion-content>
 </ion-view>

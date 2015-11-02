@@ -2,6 +2,7 @@
     var _module = angular.module('filter', [
         'relativeResource',
         'convertToInAppBrowserLink',
-        'firstValidElement'
+        'firstValidElement',
+        'firstValidPhone'
     ]);
 }());

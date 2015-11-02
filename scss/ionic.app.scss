@@ -16,8 +16,35 @@ $ionicons-font-path: "../lib/ionic/fonts" !default;
 @import "www/lib/ionic-filter-bar/scss/ionic.filter.bar";
 
 @import "u/u";
+@import "u/ratewidget";
+ 
 
-     
+.ion-content-scroll-bottom-filler {
+    height:44px;
+    display:block;
+}
+
+.ion-content-noresultsfound-container {
+    .ion-content-noresultsfound {
+        width: 100%;
+        height: 100%;
+        font-size: 120%;
+        text-align: center;
+        margin-top: 20px;
+        display:block;
+    }
+}
+
+.ion-content-loading-container {
+     .ion-content-loading {
+        width: 100%;
+        height: 100%;
+        font-size: 120%;
+        text-align: center;
+        margin-top: 20px;
+        display:block;
+    }
+}
      
 ion-list {
     .item.item-image {
@@ -35,5 +62,8 @@ ion-list {
         }
     }
 }
+
+
+    
 
 @import "content/locationbase";

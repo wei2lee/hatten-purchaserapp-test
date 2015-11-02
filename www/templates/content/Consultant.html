@@ -1,0 +1,45 @@
+<ion-view title="Consultant" id="consultant">
+    <ion-content>
+        <div class="text-center">
+            <img ng-src="{{item.AvatarResourceKey | relativeResource : 'AvatarLG'}}" width=240 height=240 class="circle padding">
+        </div>
+        <div class="list card">
+            <div class="item">
+                <p>
+                    <small>Name</small>
+                    <br>
+                    <b>{{item.FullName}}</b>
+                </p>
+            </div>
+            <div class="item" ng-if="item.Phones | firstValidPhone : 'Value'">
+                <p>
+                    <small>Contact</small>
+                    <br>
+                    <b>{{item.Phones | firstValidPhone : 'Value' : '-' }}</b>
+                </p>
+            </div>
+            <div class="item" ng-if="item.Emails | firstValidElement : 'Value'">
+                <p>
+                    <small>Email</small>
+                    <br>
+                    <b>{{item.Emails | firstValidElement : 'Value' : '-' }}</b>
+                </p>
+            </div>
+        </div>
+        <div class="padding-horizontal" ng-if="item.Phones | firstValidPhone : 'Value'">
+            <a class="button button-block button-calm icon-left ion-ios-telephone" href="tel:{{item.Phones | firstValidPhone : 'Value'}}">CALL</a>
+        </div>
+        <div class="padding-horizontal" ng-if="item.Emails | firstValidElement : 'Value'">
+            <a class="button button-block button-balanced icon-left ion-email" href="mailto:{{item.Emails | firstValidElement : 'Value'}}">EMAIL</a>
+        </div>
+        <div class="padding-horizontal">
+            <button ng-click="actionShare()" class="button button-block button-assertive icon-left ion-android-share-alt">SHARE</a>
+        </div>
+        <div class="padding-horizontal">
+            <a ng-href="#/app/consultantreview/{{consultant.UserId}}" class="button button-block button-positive icon-left ion-ios-compose">WRITE A REVIEW</a>
+        </div>
+        <div class="list card padding-md">
+            <rate-widget rate="rate"></rate-widget>
+        </div>
+    </ion-content>
+</ion-view>

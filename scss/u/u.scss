@@ -108,6 +108,12 @@
     }
 }
 
+@mixin create-font-size() {
+    @for $i from 0 through 100 {
+        .font-size-#{$i} { font-size:0%+$i; }
+    }    
+}
+
 @include create-color('bg', background-color);
 @include create-color('text', color);
 
@@ -129,8 +135,20 @@
 
 @include create-width();
 @include create-height();
+@include create-font-size();
 
 img.img-full-responsive {
     width:100%;
     height:auto;
+}
+
+.circle {
+    @include border-radius(50%);   
+}
+
+.block-nowrap-ellipsis {
+    display:block;
+    white-space: nowrap;
+    overflow-x:hidden;
+    text-overflow: ellipsis;   
 }

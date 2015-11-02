@@ -13,6 +13,13 @@
             </div>
             <div class="card">
                 <div class="item item-text-wrap" bind-html-compile="item.ProjectTemplate | convertToInAppBrowserLink"></div>
+                <div class="item" ng-if="item.Location">
+                    <p>
+                        <small>Location</small>
+                        <br>
+                        <b>{{item.Location}}</b>
+                    </p>
+                </div>
             </div>
             <div class="card">
                 <div class="item item-image padding-0">
@@ -28,14 +35,18 @@
             </div>
             
             <div class="padding-horizontal">
-                <a href="#/app/consultants/where-project/{{property.ProjectId}}" class="button button-block button-balanced">FIND A CONSULTANT</a>
+                <button ng-click="actionShare()" class="button button-block button-assertive icon-left ion-android-share-alt">SHARE</a>
+            </div>
+            
+            <div class="padding-horizontal">
+                <a href="#/app/consultants/query/project/{{item.ProjectId}}" class="button button-block button-balanced icon-left ion-android-contacts">FIND A CONSULTANT</a>
             </div>
             <div class="list card padding-md fadeIn animated" ng-if="rate">
                 <rate-widget rate="rate"></rate-widget>
             </div>
             
             <div class="padding-horizontal">
-                <a ng-href="#/app/propertyreview/{{property.ProjectId}}" class="button button-block button-positive">SUBMIT REVIEW</a>
+                <a ng-href="#/app/propertyreview/{{property.ProjectId}}" class="button button-block button-positive icon-left ion-ios-compose">WRTIE A REVIEW</a>
             </div>
         </ion-list>
     </ion-content>

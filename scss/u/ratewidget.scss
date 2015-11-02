@@ -1,3 +1,11 @@
+$rate-review-lg-font-size:35px;
+$rate-review-xss-font-size:12px;
+$rate-review-xs-font-size:14px;
+$rate-review-container-padding:0px;
+$rate-review-xss-content-padding:2px;
+$rate-review-xs-content-padding:4px;
+$rate-review-lg-content-padding:12px;
+
 .rate-widget {
     max-width:550px;
     @include display-flex;
@@ -32,7 +40,7 @@
     .rate-review {
         padding:$rate-review-container-padding;
         height:130px;
-        display:flex;
+        @include display-flex();
         font-size:$rate-review-xss-font-size;
 
         .text-section {
@@ -40,7 +48,7 @@
             padding-right:$rate-review-container-padding;
             width:100%;
             @include display-flex();
-            @include flex-grow(1,1,auto);
+            @include flex(1,1,auto);
             @include flex-direction(column);
             @include justify-content(center);
 
@@ -51,8 +59,8 @@
             }
 
             .average-rate-number-star {
-                display:flex;
-                justify-content: center;
+                @include display-flex();
+                @include justify-content(center);
                 li:not(last-child) {
                     padding-left:$rate-review-xss-content-padding;
                 }
@@ -60,8 +68,8 @@
             }
 
             .average-rate-number-people {
-                display:flex;
-                justify-content: center;
+                @include display-flex();
+                @include justify-content(center);
                 i {
                     position:relative;
                     top:0px;
@@ -77,15 +85,14 @@
             padding-left:$rate-review-container-padding;
             padding-right:$rate-review-container-padding;
             width:100%;
-            flex-grow: 1;
-            flex-shrink: 1;
-            display:flex;
-            flex-direction: column;
-            justify-content: center;
+            @include flex(1,1,auto);
+            @include display-flex();
+            @include flex-direction(column);
+            @include justify-content(center);
             li {
-                display:flex;
+                @include flex(1,1,auto);
                 .number-star-label {
-                    flex-shrink: 0;
+                    @include flex(0,1,auto);
 
                     span {
                         padding-right: $rate-review-xs-content-padding;  
@@ -93,10 +100,10 @@
                 }
                 .number-star-value {
                     width:100%;
-                    flex-grow:1;
+                    @include flex(1,0,auto);
                     position:relative;
                     div {
-                        transition:width 0.3s;
+                        @include transition(width 0.3s);
                         height:20px;
                         position:relative;
                         min-width:15px;

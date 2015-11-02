@@ -1,16 +1,20 @@
 (function () {
     var _module = angular.module('controller');
-    _module.controller('ProjectCtrl',function($scope,ControllerBase,apiProject,u){
+    _module.controller('ProjectCtrl',function($scope,ControllerBase,apiProject,u,App){
         ControllerBase($scope, 'project');
         $scope.loading = null;
         $scope.$on('$ionicView.beforeEnter', function(viewInfo, state){
             if(['none','forward','swap'].indexOf(state.direction)>=0) {
-                $scope.load();
+                if(u.Intent.data && u.Intent.data.ProjectId){
+                    $scope.item = u.Intent.data;
+                }else{
+                    $scope.load();
+                }
             }  
         })
         $scope.load = function(useCache) {
             $scope.loading = 
-            apiProject.useCache(useCache).get(u.$state.params.id).then(function(data){
+            apiProject.useCache(useCache).get(u.$state.params.id || $scope.item.ProjectId).then(function(data){
                 $scope.item = data; 
             }).finally(function(){
                 $scope.loading = null;
@@ -40,13 +44,28 @@
             u.$state.go('app.gallery');
         }
         
-        $scope.getImageWidth = function(index) {
+        $scope.getImageWidth = function(index, withPadding) {
             var padding = 20;
-            return ($scope.$ioncontent.width() - padding) + 'px';
+            var imagepadding = 0;
+            return ($scope.$ioncontent.width() - imagepadding - padding);
         }
-        $scope.getImageHeight = function(index) {
+        $scope.getImageHeight = function(index, withPadding) {
             var padding = 20;
-            return ($scope.$ioncontent.width() - padding) + 'px';
+            var imagepadding = 0;
+            var damp = u.inverseLerp(
+                $scope.$ioncontent.width(),
+                App.collectionRepeatCardLargeImageRatioXS.width,
+                App.collectionRepeatCardLargeImageRatioLG.width,
+                true
+                );
+            var ratio = u.lerp(
+                damp,
+                App.collectionRepeatCardLargeImageRatioXS.ratio,
+                App.collectionRepeatCardLargeImageRatioLG.ratio,
+                true
+                );
+            var ret = ($scope.getImageWidth(index, false) / ratio - imagepadding - padding);
+            return Math.ceil(ret);
         }
     })
 }());

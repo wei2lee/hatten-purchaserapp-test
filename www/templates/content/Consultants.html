@@ -5,24 +5,44 @@
         <ion-list>
             <div class="item item-input-inset padding-0-vertical">
                 <label class="item-input-wrapper">
-                    <input type="text" ng-model="filter.searchText" placeholder="Name, Contact">
+                    <input class="width-100" type="text" ng-model="filter.searchText" placeholder="Consultant Name, Contact">
                 </label>
-                <button class="button button-dark button-clear" modal-select modal-title="Select a Project" ng-model="filter.project" options="projects">
+                <button class="button button-dark button-clear" 
+                   modal-select 
+                   header-footer-class="bar-positive"
+                   modal-title="Select a Project" 
+                   ng-model="filter.project" 
+                   options="filter.projectOptions">
                     Filter
                     <div class="option">
                         <h2>{{option.Name}}</h2>
+                        <small class="block-nowrap-ellipsis">
+                            {{option.Location || '&nbsp;'}}
+                        </small>
                     </div>
                 </button>
             </div>
-            <div class="item"  ng-if="filter.toString()">
+            <div class="item padding-xs-vertical" ng-if="filter.toString()">
                 <small>Filters: {{filter.toString()}}</small>
             </div>
-            <div class="card" collection-repeat="item in items" item-render-buffer="8" item-width="getItemWidth($index)" item-height="getItemHeight($index, true)" ng-style="{height: getItemHeight($index, false), left:0, right:0}" ng-click="actionItemClick($index)">
-                <a ng-href="#/app/consultant/{{item.UserId}}" class="item item-icon-left item-avatar-left">
+            <div ng-if="getShowNoResultsFound()" class="ion-content-noresultsfound-container">
+                <strong class="ion-content-noresultsfound">No Results Found.</strong>
+            </div>
+            <div ng-if="getShowLoading()" class="ion-content-loading-container">
+                <strong class="ion-content-loading">Loading...</strong>
+            </div>
+            <div class="card" collection-repeat="item in getItems()" item-render-buffer="8" item-width="getItemWidth($index)" item-height="getItemHeight($index, true)" ng-style="{height: getItemHeight($index, false), left:0, right:0}" ng-click="actionItemClick($index)">
+                   <a class="item item-icon-left item-avatar-left">
                     <img ng-src="{{item.AvatarResourceKey | relativeResource : 'AvatarSmall'}}">
                     <p><strong>{{item.FullName}}</strong></p>
-                    <p ng-if="item.Phones | firstValidElement"><small>{{item.Phones | firstValidElement : '-' }}</small></p>
-                    <p ng-if="item.Address"><small>{{item.Address}}</small></p>
+                    <p>
+                        <small  ng-if="item.Phones | firstValidPhone">
+                            {{item.Phones | firstValidPhone : 'Value' : '' }}
+                        </small>
+                        <small ng-if="item.Emails | firstValidElement">
+                            {{item.Emails | firstValidElement : 'Value' : '' }}
+                        </small>
+                    </p>
                 </a>
         </ion-list>
     </ion-content>

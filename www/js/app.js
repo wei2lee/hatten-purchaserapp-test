@@ -21,6 +21,6 @@ angular.module('app', [
             StatusBar.styleDefault();
         }  
     });
-    App.token = localStorage.getObject('token', {});
-    App.user = localStorage.getObject('user', {});
+//    App.token = localStorage.getObject('token', {});
+//    App.user = localStorage.getObject('user', {});
 });

@@ -60,6 +60,16 @@
                 }
             })
         
+        .state('app.consultants-query-project', {
+                url: '/consultants/query/project/{{id}}',
+                views: {
+                    'menuContent': {
+                        templateUrl: 'templates/content/Consultants.html',
+                        controller: 'ConsultantsCtrl'
+                    }
+                }
+            })
+        
         .state('app.consultant', {
                 url: '/consultant/{id}',
                 views: {

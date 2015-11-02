@@ -1,0 +1,14 @@
+{
+  "name": "ion-slide-box-tabs",
+  "homepage": "https://github.com/JKnorr91/ion-slide-box-tabs",
+  "_release": "fd4947f8ee",
+  "_resolution": {
+    "type": "branch",
+    "branch": "master",
+    "commit": "fd4947f8eeaff94505a9a8a4f65f94e1d6d1d3e5"
+  },
+  "_source": "git://github.com/JKnorr91/ion-slide-box-tabs.git",
+  "_target": "*",
+  "_originalSource": "ion-slide-box-tabs",
+  "_direct": true
+}
