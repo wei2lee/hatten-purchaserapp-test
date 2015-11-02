@@ -61,7 +61,7 @@
             })
         
         .state('app.consultants-query-project', {
-                url: '/consultants/query/project/{{id}}',
+                url: '/consultants/query/project/{id}',
                 views: {
                     'menuContent': {
                         templateUrl: 'templates/content/Consultants.html',

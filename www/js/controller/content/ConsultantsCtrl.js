@@ -95,7 +95,7 @@
                 $scope.items = [];
                 $scope.filter.projectOptions = [];
                 if(u.$state.current.name == 'app.consultants-query-project'){
-                    $scope.filter.project = {ProjectId:$state.params.id}   
+                    $scope.filter.project = {'ProjectId':u.$state.params.id}   
                 }
                 $scope.load();
             }
@@ -106,6 +106,10 @@
                     $scope.projects = data;
                     $scope.filter.projectOptions = _.sortBy($scope.projects, function(o){
                         return o.Name;
+                    });
+                    if($scope.filter.project)
+                    $scope.filter.project = _.find($scope.projects, function(o){
+                       return $scope.filter.project.ProjectId == o.ProjectId; 
                     });
                 console.log($scope.filter.projectOptions);
                 }).finally(function () {
@@ -139,6 +143,9 @@
                     return $scope.loadConsultant(useCache);
                 }).finally(function(){
                     $scope.loading = null;
+//                    u.$timeout(function(){
+//                        u.$ionicScrollDelegate.resize();
+//                    },3000);
                 });
             return $scope.loading;
         }
