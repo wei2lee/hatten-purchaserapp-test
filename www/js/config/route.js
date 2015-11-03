@@ -95,7 +95,18 @@
                 views: {
                     'menuContent': {
                         templateUrl: 'templates/content/EventsBase.html',
-                        controller: 'EventsCtrl'
+                        controller: 'EventsBaseCtrl'
+                    }
+                }
+            })
+        
+        
+        .state('app.event', {
+                url: '/event/{id}',
+                views: {
+                    'menuContent': {
+                        templateUrl: 'templates/content/EventBase.html',
+                        controller: 'EventBaseCtrl'
                     }
                 }
             })

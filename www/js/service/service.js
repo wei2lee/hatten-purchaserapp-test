@@ -9,6 +9,7 @@
         'Error',
         'ErrorDomain',
         'SemanticVersion',
-        'jett.ionic.filter.bar'
+        'jett.ionic.filter.bar',
+        'RateWidget'
         ]);
 }());

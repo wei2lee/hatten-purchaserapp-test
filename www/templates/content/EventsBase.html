@@ -1,6 +1,46 @@
 <ion-view>
     <ion-content padding=true>
-        <button ng-click="actionToken()" class="button button-assertive button-block">Token</button>
-        <button ng-click="actionGetProjects()" class="button button-balanced button-block">Get Projects</button>
+        <ion-refresher pulling-text="Pull to refresh" on-refresh="actionRefresh()">
+        </ion-refresher>
+        <div class="list card fade-in-animation no-top-gap" ng-repeat="event in events | orderBy:'-EventId'">
+            <div ng-if="event.RoadShow.Visible5" class="item timeelapse-container-top wrap" >
+                <div ng-if="!event._expireRemainFinished">
+                    <span>
+                        <span>{{event.Name}} started in : 
+                            <span class="countdown" style="display:inline-block;">
+                                <span class="countdown-day">{{event._expireRemainDay}}</span>
+                                <span class="countdown-time">{{event._expireRemainTime}}</span>
+                            </span>
+                        </span>
+                        <br/>
+                        <small>
+                            <span style="display:inline-block">{{event._period}}</span>
+                        </small>
+                    </span>
+                </div>
+                <div ng-if="event._expireRemainFinished">
+                    <span ng-if="event._expireRemainFinished">
+                        <span style="display:inline-block">{{event.Name}}</span>
+                        <br/><small><span style="display:inline-block">{{event._period}},</span></small>
+                        <small><span style="display:inline-block">{{event._expireDesc}}</span></small>
+                    </span>
+                </div>
+            </div>
+            <div class="item padding-0 line-height-0">
+                <a ng-click="actionClick(event)" class="timeelapse-container">
+                    <img class="full-image" ng-src="{{event.RoadShow.EventSmallPhotoResourceKey | relativeResource}}">
+                </a>
+            </div>
+            <div class="item item-icon-right" ng-if="event.RoadShow.Visible6&&event.RoadShow.Visible7">
+                <span ng-if="event.RoadShow.Visible7" class="font-bold font-size-lg">{{event.Name}}</span>&nbsp;
+                <a ng-if="event.RoadShow.Visible6" ng-click="actionShare(event)">
+                    <i class="icon ion-android-share-alt icon-left-border"></i>
+                </a>
+            </div>
+            <button ng-click="actionAttempEvent(event)" ng-if="event.RoadShow.Visible2" class="learn-more-button button button-full button-assertive footer-button  icon-left ion-flag">
+                ATTEND EVENT
+            </button>
+        </div>
+        <div class="ion-content-scroll-bottom-filler"></div>
     </ion-content>
 </ion-view>

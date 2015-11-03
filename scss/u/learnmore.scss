@@ -1,0 +1,78 @@
+$learn-more-bg-color:rgba(100,100,100,1);
+$learn-more-bg-color-start:rgba(100,100,100,0); 
+
+.learn-more-container {
+    position:relative;
+    .learn-more-overlay {
+        position:absolute;
+        bottom:46px;
+        height:100px;
+        width:100%;
+//        background: linear-gradient(to bottom, rgba(56,126,245,0) 0%,rgba(56,126,245,1) 100%);
+        background: linear-gradient(to bottom, $learn-more-bg-color-start 0%,$learn-more-bg-color 100%);
+        
+        @media screen and (min-width:$grid-responsive-md-break) {
+            display:none;
+        }
+        
+    }
+    .learn-more-button {
+        background-color:$learn-more-bg-color;
+        border-color:$learn-more-bg-color;
+        &.activated {
+            background-color:$learn-more-bg-color;
+        }
+        
+        position:absolute;
+        bottom:0px;
+        
+        @media screen and (min-width:$grid-responsive-md-break) {
+            display:none;
+        }
+    }
+}
+.learn-more-container {
+    transition:max-height 1.5s ease-in-out;
+    
+    @media screen and (max-width:$grid-responsive-md-break) {
+        max-height:200px;
+    }
+    &.tooshort {
+        .learn-more-overlay {
+            opacity:1;
+        }
+        .learn-more-button {
+            max-height:60px;
+            opacity:1;
+        }
+    }
+    
+    .learn-more-overlay {
+        transition:opacity 0.3s ease-out;
+    }
+    .learn-more-button {
+        transition:max-height 0.3s ease-out, opacity 0.3s ease-out;
+    }
+}
+
+.learn-more-container.expanded {
+    @media screen and (max-width:$grid-responsive-md-break) {
+        max-height:2000px;
+    }
+    .learn-more-overlay {
+        opacity:0;
+    }
+    .learn-more-button {
+        max-height:0px;
+        opacity:0;
+    }
+    &.tooshort {
+        .learn-more-overlay {
+            opacity:0;
+        }
+        .learn-more-button {
+            max-height:0px;
+            opacity:0;
+        }
+    }
+}

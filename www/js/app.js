@@ -7,7 +7,8 @@ angular.module('app', [
     'filter',
     'value',
     'angular-bind-html-compile',
-    'ionic-modal-select'
+    'ionic-modal-select',
+    'RateWidget'
 ])
 
 .run(function ($ionicPlatform,App,localStorage,$ionicConfig) {

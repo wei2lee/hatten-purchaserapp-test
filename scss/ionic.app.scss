@@ -11,12 +11,22 @@ $dark:                            #444 !default;
 */
 $ionicons-font-path: "../lib/ionic/fonts" !default;
 
+$sidemenu-bottom-overlay-box-shadow:0 0 20px rgba(0, 0, 0, .3) !default;
+$bgcolor: rgba(232, 230, 230, 0.21) ;
+$black-theme-bg-color:black;
+$light-theme-bg-color:#fafafa;
+$light-theme-text-color:#ccc;
+//$card-box-shadow:0 1px 15px rgba(0, 0, 0, .6) !default;
+
+
+
 @import "www/lib/ionic/scss/ionic";
 
 @import "www/lib/ionic-filter-bar/scss/ionic.filter.bar";
 
 @import "u/u";
 @import "u/ratewidget";
+ 
  
 
 .ion-content-scroll-bottom-filler {
@@ -35,6 +45,11 @@ $ionicons-font-path: "../lib/ionic/fonts" !default;
     }
 }
 
+.button.button-full.footer-button {
+    margin-bottom:0;
+    margin-top:0;
+} 
+
 .ion-content-loading-container {
      .ion-content-loading {
         width: 100%;
@@ -46,13 +61,13 @@ $ionicons-font-path: "../lib/ionic/fonts" !default;
     }
 }
      
-ion-list {
+ion-list, .list.card {
     .item.item-image {
         >div {
             background-repeat:no-repeat;
             background-size:cover;
             background-position:center;
-            transition:background-image 0.3s;
+            @include transition(background-image 0.3s);
         }
     }
     .item.item-icon-right {
@@ -62,6 +77,7 @@ ion-list {
         }
     }
 }
+
 
 
     

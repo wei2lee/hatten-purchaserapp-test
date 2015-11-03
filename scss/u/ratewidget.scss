@@ -8,6 +8,8 @@ $rate-review-lg-content-padding:12px;
 
 .rate-widget {
     max-width:550px;
+    margin-left:auto;
+    margin-right:auto;
     @include display-flex;
     @include flex-direction(column);
     li {
@@ -82,6 +84,7 @@ $rate-review-lg-content-padding:12px;
         }
 
         .chart-section {
+
             padding-left:$rate-review-container-padding;
             padding-right:$rate-review-container-padding;
             width:100%;
@@ -90,17 +93,18 @@ $rate-review-lg-content-padding:12px;
             @include flex-direction(column);
             @include justify-content(center);
             li {
-                @include flex(1,1,auto);
+                @include display-flex();
+                @include flex-direction(row);
+                @include flex(0,1,auto);
                 .number-star-label {
-                    @include flex(0,1,auto);
-
+                    @include flex(0,0,auto);
                     span {
                         padding-right: $rate-review-xs-content-padding;  
                     }
                 }
                 .number-star-value {
                     width:100%;
-                    @include flex(1,0,auto);
+                    @include flex(1,1,auto);
                     position:relative;
                     div {
                         @include transition(width 0.3s);

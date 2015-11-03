@@ -13,6 +13,7 @@
     "angular-http-auth": "~1.2.2",
     "angular-bind-html-compile": "~1.1.0",
     "ionic-modal-select": "~1.0.0",
-    "ionic-filter-bar": "~1.1.1"
+    "ionic-filter-bar": "~1.1.1",
+    "moment": "~2.10.6"
   }
 }

@@ -41,12 +41,17 @@
             <div class="padding-horizontal">
                 <a href="#/app/consultants/query/project/{{item.ProjectId}}" class="button button-block button-balanced icon-left ion-android-contacts">FIND A CONSULTANT</a>
             </div>
-            <div class="list card padding-md fadeIn animated" ng-if="rate">
-                <rate-widget rate="rate"></rate-widget>
-            </div>
             
             <div class="padding-horizontal">
                 <a ng-href="#/app/propertyreview/{{property.ProjectId}}" class="button button-block button-positive icon-left ion-ios-compose">WRTIE A REVIEW</a>
+            </div>
+            
+            <div class="padding-horizontal">
+                <a ng-href="actionConstructions()" class="button button-block button-energized icon-left ion-settings">CONSTRUCTIONS</a>
+            </div>
+            
+            <div class="list card padding-md" ng-if="rate">
+                <rate-widget rate="rate"></rate-widget>
             </div>
         </ion-list>
     </ion-content>

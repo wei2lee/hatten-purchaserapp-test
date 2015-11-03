@@ -55,10 +55,11 @@
         $scope.$on('$ionicView.beforeEnter', function(viewInfo, state){
             if(['none','forward','swap'].indexOf(state.direction)>=0) {
                 $scope.loading = null;
+                $scope.loadingProject = null;
+                $scope.projects = [];
                 $scope.items = [];
                 $scope.load();
             }  
-            console.log($scope.ioncontent);
         })
         $scope.load = function(useCache) {
             $scope.loading = 
@@ -66,9 +67,9 @@
                 $scope.projects = data;
             }).finally(function(){
                 $scope.loading = null;
-//                u.$timeout(function(){
-//                    u.$ionicScrollDelegate.resize();
-//                },100);
+                u.$timeout(function(){
+                    u.$ionicScrollDelegate.resize();
+                },100);
             });
             return $scope.loading;
         }

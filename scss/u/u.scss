@@ -152,3 +152,41 @@ img.img-full-responsive {
     overflow-x:hidden;
     text-overflow: ellipsis;   
 }
+
+.wrap {
+    white-space: normal;
+}
+
+.nowrap {
+    white-space: nowrap;
+}
+
+.line-height-0 {
+    line-height:0;   
+}
+
+.text-center {
+    text-align: center;
+}
+
+.center-block {
+    margin:0 auto;   
+}
+
+.responsive-container {
+    position: relative;
+    >canvas:first-child {
+        position: relative;
+        width: 100%;
+        height: auto;
+        z-index: 1;
+    }
+    >.responsive-content {
+        position: absolute;
+        left: 0;
+        top: 0;
+        width: 100%;
+        height: 100%;
+        z-index: 2;
+    }
+}

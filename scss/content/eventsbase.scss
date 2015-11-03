@@ -1,0 +1,51 @@
+#events {
+    .timeelapse-container-top {
+        background-color:$light;
+        color:$dark;
+        font-size:20px;
+        line-height:1.2em;
+        small {
+            line-height:1em;
+            font-size:12px;   
+        }
+        .countdown {
+            .countdown-day {
+                font-family: 'Lato', sans-serif;
+                font-size:37px;
+                line-height:1em;
+            }   
+            .countdown-time {
+                font-size:16px;
+                line-height:1em;
+            }
+        }
+    }
+
+    .timeelapse-container {
+        position:relative;
+        display:inline-block;
+        width:100%;
+
+
+
+        .timeelapse {
+            position:absolute;
+            text-decoration: none;
+            color:white;
+            top:6%;
+            text-align: center;
+            width:100%;
+
+            font-size:18px; //380px
+            @media screen and (min-width:(380px*1.2)) { font-size:(18px*1.2); }
+            @media screen and (min-width:(380px*1.44)) { font-size:(18px*1.44); }
+            @media screen and (min-width:(380px*1.728)) { font-size:(18px*1.728); }
+            @media screen and (min-width:(380px*2.073)) { font-size:(18px*2.073); }
+            @media screen and (min-width:(380px*2.488)) { font-size:(18px*2.488); }
+            @media screen and (min-width:(380px*2.985)) { font-size:(18px*2.985); }
+            @media screen and (min-width:(380px*3.583)) { font-size:(18px*3.583); }
+        }
+
+
+    }
+}

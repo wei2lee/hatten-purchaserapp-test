@@ -3,7 +3,7 @@
         <div class="text-center">
             <img ng-src="{{item.AvatarResourceKey | relativeResource : 'AvatarLG'}}" width=240 height=240 class="circle padding">
         </div>
-        <div class="list card">
+        <div class="list card" ng-if="item">
             <div class="item">
                 <p>
                     <small>Name</small>
@@ -38,7 +38,7 @@
         <div class="padding-horizontal">
             <a ng-href="#/app/consultantreview/{{consultant.UserId}}" class="button button-block button-positive icon-left ion-ios-compose">WRITE A REVIEW</a>
         </div>
-        <div class="list card padding-md">
+        <div class="list card padding-md" ng-if="rate">
             <rate-widget rate="rate"></rate-widget>
         </div>
     </ion-content>

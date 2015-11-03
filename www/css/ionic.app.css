@@ -10616,8 +10616,40 @@ img.img-full-responsive {
   overflow-x: hidden;
   text-overflow: ellipsis; }
 
+.wrap {
+  white-space: normal; }
+
+.nowrap {
+  white-space: nowrap; }
+
+.line-height-0 {
+  line-height: 0; }
+
+.text-center {
+  text-align: center; }
+
+.center-block {
+  margin: 0 auto; }
+
+.responsive-container {
+  position: relative; }
+  .responsive-container > canvas:first-child {
+    position: relative;
+    width: 100%;
+    height: auto;
+    z-index: 1; }
+  .responsive-container > .responsive-content {
+    position: absolute;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    z-index: 2; }
+
 .rate-widget {
   max-width: 550px;
+  margin-left: auto;
+  margin-right: auto;
   display: -webkit-box;
   display: -webkit-flex;
   display: -moz-box;
@@ -10766,29 +10798,41 @@ img.img-full-responsive {
       -moz-justify-content: center;
       justify-content: center; }
       .rate-widget .rate-review .chart-section li {
-        -webkit-box-flex: 1;
-        -webkit-flex: 1 1 auto;
-        -moz-box-flex: 1;
-        -moz-flex: 1 1 auto;
-        -ms-flex: 1 1 auto;
-        flex: 1 1 auto; }
+        display: -webkit-box;
+        display: -webkit-flex;
+        display: -moz-box;
+        display: -moz-flex;
+        display: -ms-flexbox;
+        display: flex;
+        -webkit-box-direction: normal;
+        -webkit-box-orient: horizontal;
+        -webkit-flex-direction: row;
+        -moz-flex-direction: row;
+        -ms-flex-direction: row;
+        flex-direction: row;
+        -webkit-box-flex: 0;
+        -webkit-flex: 0 1 auto;
+        -moz-box-flex: 0;
+        -moz-flex: 0 1 auto;
+        -ms-flex: 0 1 auto;
+        flex: 0 1 auto; }
         .rate-widget .rate-review .chart-section li .number-star-label {
           -webkit-box-flex: 0;
-          -webkit-flex: 0 1 auto;
+          -webkit-flex: 0 0 auto;
           -moz-box-flex: 0;
-          -moz-flex: 0 1 auto;
-          -ms-flex: 0 1 auto;
-          flex: 0 1 auto; }
+          -moz-flex: 0 0 auto;
+          -ms-flex: 0 0 auto;
+          flex: 0 0 auto; }
           .rate-widget .rate-review .chart-section li .number-star-label span {
             padding-right: 4px; }
         .rate-widget .rate-review .chart-section li .number-star-value {
           width: 100%;
           -webkit-box-flex: 1;
-          -webkit-flex: 1 0 auto;
+          -webkit-flex: 1 1 auto;
           -moz-box-flex: 1;
-          -moz-flex: 1 0 auto;
-          -ms-flex: 1 0 auto;
-          flex: 1 0 auto;
+          -moz-flex: 1 1 auto;
+          -ms-flex: 1 1 auto;
+          flex: 1 1 auto;
           position: relative; }
           .rate-widget .rate-review .chart-section li .number-star-value div {
             -webkit-transition: width 0.3s;
@@ -10823,6 +10867,10 @@ img.img-full-responsive {
   margin-top: 20px;
   display: block; }
 
+.button.button-full.footer-button {
+  margin-bottom: 0;
+  margin-top: 0; }
+
 .ion-content-loading-container .ion-content-loading {
   width: 100%;
   height: 100%;
@@ -10831,13 +10879,14 @@ img.img-full-responsive {
   margin-top: 20px;
   display: block; }
 
-ion-list .item.item-image > div {
+ion-list .item.item-image > div, .list.card .item.item-image > div {
   background-repeat: no-repeat;
   background-size: cover;
   background-position: center;
+  -webkit-transition: background-image 0.3s;
   transition: background-image 0.3s; }
 
-ion-list .item.item-icon-right .icon-left-border {
+ion-list .item.item-icon-right .icon-left-border, .list.card .item.item-icon-right .icon-left-border {
   border-left: solid 1px #dddddd;
   padding-left: 10px; }
 

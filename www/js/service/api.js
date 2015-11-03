@@ -195,6 +195,18 @@
         apiBase.prototype.saveToStorage = function () {
 
         }
+        apiBase.prototype.http = function(option) {
+            option = _.extend(option||{}, {cache: this._useCache});
+            return $http(option);
+        }
+        apiBase.prototype.httpget = function(url, option) {
+            option = _.extend(option||{}, {cache: this._useCache});
+            return $http.get(url, option);
+        }
+        apiBase.prototype.httppost = function(url, option) {
+            option = _.extend(option||{}, {cache: this._useCache});
+            return $http.post(url, option);
+        }
         return apiBase;
     });
     /* ==========================================================================
@@ -204,34 +216,36 @@
         function api() {}
         api.prototype = new apiBase();
         api.prototype.query = function () {
-            return $http.get(App.apiEndPoint + 'Project/GetAllProjects', {
-                cache: this._useCache
-            });
+            return this.httpget(App.apiEndPoint + 'Project/GetAllProjects');
         }
         api.prototype.get = function (id) {
-            return $http.get(App.apiEndPoint + sprintf('AppProject/%s', id), {
-                cache: this._useCache
+            return this.httpget(App.apiEndPoint + sprintf('AppProject/%s', id)).then(function(data){
+                data.ProjectId = data.Id;
+                return data;
             });
         }
         api.prototype.getRate = function (where) {
-            if (where.hasOwnProperty('Customer'))
-                return $http.get(App.apiEndPoint + sprintf('Rate/GetProject?iProjectID=%s&iCustomerID=%s', where.Project.ProjectId, where.Customer.CustomerId));
+            if (where.Customer)
+                return this.httpget(App.apiEndPoint + sprintf('Rate/GetProject?iProjectID=%s&iCustomerID=%s', where.Project.ProjectId, where.Customer.CustomerId)).then(function(data){
+                    data.ProjectId = data.ProjectID;
+                    return data; 
+                });
             else
                 return this.get(where.Project.ProjectId).then(function (data) {
                     return {
-                        ProjectID: data.RoadShow.RoadShowId,
-                        Total5: data.RoadShow.Star5,
-                        Total4: data.RoadShow.Star4,
-                        Total3: data.RoadShow.Star3,
-                        Total2: data.RoadShow.Star2,
-                        Total1: data.RoadShow.Star1,
-                        AverRate: data.RoadShow.StartAve,
-                        Total: data.RoadShow.StartTotal
+                        ProjectId: data.ProjectId,
+                        Total5: data.Star5,
+                        Total4: data.Star4,
+                        Total3: data.Star3,
+                        Total2: data.Star2,
+                        Total1: data.Star1,
+                        AverRate: data.StarAve,
+                        Total: data.StarTotal
                     };
                 });
         }
-        api.prototype.setRate = function (id) {
-            return $http.save(App.apiEndPoint + sprintf('Rate/UpdateProjectRate?iProjectId=%s&iCustomerID=%s&iRateValue=%s', data.Project.ProjectId, data.Customer.CustomerId, data.rateValue));
+        api.prototype.setRate = function (data) {
+            return this.httpget(App.apiEndPoint + sprintf('Rate/UpdateProjectRate?iProjectId=%s&iCustomerID=%s&iRateValue=%s', data.Project.ProjectId, data.Customer.CustomerId, data.value));
         }
         return new api();
     })
@@ -362,11 +376,11 @@
         api.prototype.query = function (where) {
             var self = this;
             if (where.hasOwnProperty('Customer'))
-                return $http.get(App.apiEndPoint + sprintf('AppCustomer/%s/Agents', where.Customer.IC), {cache:this._useCache});
+                return this.httpget(App.apiEndPoint + sprintf('AppCustomer/%s/Agents', where.Customer.IC));
             else if (where.hasOwnProperty('Project'))
-                return $http.get(App.apiEndPoint + sprintf('AppUser/GetByProjectId?iProjectID=%s', where.Project.ProjectId), {cache:this._useCache});
+                return this.httpget(App.apiEndPoint + sprintf('AppUser/GetByProjectId?iProjectID=%s', where.Project.ProjectId));
             else if (where.hasOwnProperty('AssociateUnit'))
-                return $http.get(App.apiEndPoint + sprintf('AppUser/GetByUnitId?iUnitID=%s', where.AssociateUnit.UnitId), {cache:this._useCache});
+                return this.httpget(App.apiEndPoint + sprintf('AppUser/GetByUnitId?iUnitID=%s', where.AssociateUnit.UnitId));
             else {
                 return $q.reject(new Error('Unimplemented'));
             }
@@ -375,24 +389,27 @@
             return $http.get(App.apiEndPoint + sprintf('AppUser/%s', id), {cache:this._useCache});
         }
         api.prototype.getRate = function (where) {
-            if (where.hasOwnProperty('Customer'))
-                return $http.get(App.apiEndPoint + sprintf('Rate/GetEventRate?iEventId=%s&iCustomerID=%s', where.Event.EventId, where.Customer.CustomerId));
+            if (where.Customer)
+                return this.httpget(App.apiEndPoint + sprintf('api/Rate/GetSysUser?iSysUserID=%s&iCustomerID=%s', where.Consultant.UserId, where.Customer.CustomerId)).then(function(data){
+                    data.UserId = data.SystemUserID;
+                    return data;
+                })
             else
-                return this.get(where.Event.EventId).then(function (data) {
+                return this.get(where.Consultant.UserId).then(function (data) {
                     return {
-                        SystemUserID: data.RoadShow.RoadShowId,
-                        Total5: data.RoadShow.Star5,
-                        Total4: data.RoadShow.Star4,
-                        Total3: data.RoadShow.Star3,
-                        Total2: data.RoadShow.Star2,
-                        Total1: data.RoadShow.Star1,
-                        AverRate: data.RoadShow.StartAve,
-                        Total: data.RoadShow.StartTotal
+                        UserId: data.UserId,
+                        Total5: data.Star5,
+                        Total4: data.Star4,
+                        Total3: data.Star3,
+                        Total2: data.Star2,
+                        Total1: data.Star1,
+                        AverRate: data.StarAve,
+                        Total: data.StarTotal
                     };
                 });
         }
-        api.prototype.setRate = function (id) {
-            return $http.save(App.apiEndPoint + sprintf('Rate/UpdateEventRate?iEventId=%s&iCustomerID=%s&iRateValue=%s', data.Consultant.SysUserId, data.Customer.CustomerId, data.rateValue));
+        api.prototype.setRate = function (data) {
+            return this.httpget(App.apiEndPoint + sprintf('Rate/UpdateSysUser?iSysUserID=%s&iCustomerID=%s&iRateValue=%s', data.Consultant.UserId, data.Customer.CustomerId, data.value));
         }
         return new api();
     })
@@ -490,20 +507,31 @@
         function api() {}
         api.prototype = new apiBase();
         api.prototype.query = function () {
-            return $http.get(App.apiEndPoint + 'WhatNews/GetAllEvent');
+            return this.httpget(App.apiEndPoint + 'WhatNews/GetAllEvent').then(function(data){
+                return _.map(data, function(o){
+                        o.RoadShow._startDate = o.RoadShow.StartDate ? new Date(o.RoadShow.StartDate).getTime()/1000 : null;
+                        o.RoadShow._endDateTime = o.RoadShow.EndDateTime ? new Date(o.RoadShow.EndDateTime).getTime()/1000 : null;
+                        var _start = o.RoadShow.StartDate ? moment(o.RoadShow.StartDate) : null;
+                        _start = _start ? _start.format('D') : '';
+                        var _end = o.RoadShow.EndDateTime ? moment(o.RoadShow.EndDateTime) : null;
+                        _end = _end ? _end.format('D MMM YYYY') : '';
+                        o._period = _start + '-' + _end;
+                        return o;
+                    }); 
+            });
         }
         api.prototype.get = function (id) {
-            return $http.get(App.apiEndPoint + sprintf('WhatNews/GetWhatNewsById?eventid=%s', id));
+            return this.httpget(App.apiEndPoint + sprintf('WhatNews/GetWhatNewsById?eventid=%s', id));
         }
         api.prototype.attemp = function (data) {
-            return $http.get(App.apiEndPoint + sprintf('Rate/AttendEvent?iEventId=%s&iCustomerID=%s', data.Event.EventId, data.Customer.CustomerId));
+            return this.httpget(App.apiEndPoint + sprintf('Rate/AttendEvent?iEventId=%s&iCustomerID=%s', data.Event.EventId, data.Customer.CustomerId));
         }
         api.prototype.unattemp = function (data) {
-            return $http.get(App.apiEndPoint + sprintf('Rate/UnAttendEvent?iEventId=%s&iCustomerID=%s', data.Event.EventId, data.Customer.CustomerId));
+            return this.httpget(App.apiEndPoint + sprintf('Rate/UnAttendEvent?iEventId=%s&iCustomerID=%s', data.Event.EventId, data.Customer.CustomerId));
         }
         api.prototype.getRate = function (where) {
-            if (where.hasOwnProperty('Customer'))
-                return $http.get(App.apiEndPoint + sprintf('Rate/GetEventRate?iEventId=%s&iCustomerID=%s', where.Event.EventId, where.Customer.CustomerId));
+            if (where.Customer)
+                return this.httpget(App.apiEndPoint + sprintf('Rate/GetEventRate?iEventId=%s&iCustomerID=%s', where.Event.EventId, where.Customer.CustomerId));
             else
                 return this.get(where.Event.EventId).then(function (data) {
                     return {
@@ -519,7 +547,7 @@
                 });
         }
         api.prototype.saveRate = function (id) {
-            return $http.save(App.apiEndPoint + sprintf('Rate/UpdateEventRate?iEventId=%s&iCustomerID=%s&iRateValue=%s', data.Event.EventId, data.Customer.CustomerId, data.rateValue));
+            return this.httpget(App.apiEndPoint + sprintf('Rate/UpdateEventRate?iEventId=%s&iCustomerID=%s&iRateValue=%s', data.Event.EventId, data.Customer.CustomerId, data.rateValue));
         }
         return new api();
     })

@@ -1,30 +1,69 @@
 (function () {
     var _module = angular.module('controller');
-    _module.controller('ProjectCtrl',function($scope,ControllerBase,apiProject,u,App){
+    _module.controller('ProjectCtrl',function($scope,ControllerBase,apiProject,u,App,RateWidget){
         ControllerBase($scope, 'project');
-        $scope.loading = null;
+        $scope.loadingItem = null;
+        $scope.loadingRate = null;
         $scope.$on('$ionicView.beforeEnter', function(viewInfo, state){
             if(['none','forward','swap'].indexOf(state.direction)>=0) {
+                $scope.loadingItem = null;
+                $scope.loadingRate = null;
                 if(u.Intent.data && u.Intent.data.ProjectId){
                     $scope.item = u.Intent.data;
+                    $scope.loadRate(); 
                 }else{
-                    $scope.load();
+                    $scope.loadItem().then(function(){
+                        $scope.loadRate(); 
+                    });
                 }
             }  
         })
-        $scope.load = function(useCache) {
-            $scope.loading = 
-            apiProject.useCache(useCache).get(u.$state.params.id || $scope.item.ProjectId).then(function(data){
+        $scope.loadItem = function(useCache) {
+            return $scope.loadingItem = 
+            apiProject.useCache(useCache).get(u.$state.params.id).then(function(data){
                 $scope.item = data; 
+                u.$timeout(function(){
+                    u.$ionicScrollDelegate.resize();
+                },100)
             }).finally(function(){
-                $scope.loading = null;
+                $scope.loadingItem = null;
             });
-            return $scope.loading;
+        }
+        $scope.loadRate = function(useCache) {
+            var where = {};
+            where.Customer = App.user;
+            where.Project = $scope.item;
+            return $scope.loadingRate = 
+                apiProject.useCache(useCache).getRate(where).then(function(data){
+                    $scope.setRate(data);
+                }).finally(function(){
+                    $scope.loadingRate = null;
+                });
+        }
+        $scope.setRate = function(o) {
+            if($scope.rate == null){
+                $scope.rate = new RateWidget();
+                $scope.rate.title = 'Rate this Project';
+                $scope.rate.ItemIdPropertyName = 'ProjectId';
+                $scope.rate.onSetRate = $scope.onSetRate;
+            }
+            $scope.rate.set(o);
+        }
+        $scope.onSetRate = function(i) {
+            var data = {
+                Customer: App.logonUser,
+                Project: $scope.item,
+                value: i
+            }
+            apiProject.setRate(data).then(function(data){
+                $scope.setRate(data);
+            });
         }
         $scope.actionRefresh = function() {
-            if($scope.loading)return;
-            $scope.loading =
-            $scope.load(false).finally(function(){
+            if($scope.loadingItem || $scope.loadingRate)return;
+            $scope.loadItem(false).then(function(){
+                return $scope.loadRate(false); 
+            }).finally(function(){
                 u.$timeout(function(){
                     $scope.$broadcast('scroll.refreshComplete');    
                 },100);

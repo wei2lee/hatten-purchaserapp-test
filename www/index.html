@@ -8,7 +8,9 @@
 
 
     <!-- compiled css output -->
+    <link href="https://fonts.googleapis.com/css?family=Lato%3A400%2C100" rel="stylesheet" type="text/css">
     <link href="css/ionic.app.css" rel="stylesheet">
+    
 
     <!-- ionic/angularjs js -->
     <script src="lib/jquery/dist/jquery.min.js"></script>
@@ -18,6 +20,7 @@
     <script src="lib/ionic-filter-bar/dist/ionic.filter.bar.min.js"></script>
     <script src="lib/ionic-modal-select/dist/ionic-modal-select.js"></script>
     <script src="lib/angular-bind-html-compile/angular-bind-html-compile.js"></script>
+    <script src="lib/moment/moment.js"></script>
 
     <!-- cordova script (this will be a 404 during development) -->
     <script src="lib/ngCordova/dist/ng-cordova.min.js"></script>
@@ -33,13 +36,15 @@
     <script src="js/controller/content/ConstructionProjectsCtrl.js"></script>
     <script src="js/controller/content/ConsultantsCtrl.js"></script>
     <script src="js/controller/content/ConsultantCtrl.js"></script>
-    <script src="js/controller/content/EventsCtrl.js"></script>
-    <script src="js/controller/content/ProfileCtrl.js"></script>
-    <script src="js/controller/content/ProjectsCtrl.js"></script>
-    <script src="js/controller/content/ProjectCtrl.js"></script>
-    <script src="js/controller/content/PurchasedPropertiesCtrl.js"></script>
     <script src="js/controller/content/VouchersCtrl.js"></script>
     <script src="js/controller/content/WhatsNewCtrl.js"></script>
+    <script src="js/controller/content/EventsBaseCtrl.js"></script>
+    <script src="js/controller/content/EventBaseCtrl.js"></script>
+    <script src="js/controller/content/ProjectsCtrl.js"></script>
+    <script src="js/controller/content/ProjectCtrl.js"></script>
+    <script src="js/controller/content/ProfileCtrl.js"></script>
+    <script src="js/controller/content/PurchasedPropertiesCtrl.js"></script>
+    <script src="js/controller/content/PurchasedPropertieCtrl.js"></script>
     <script src="js/controller/content/LocationBaseCtrl.js"></script>
     <script src="js/controller/content/GalleryBaseCtrl.js"></script>
     <script src="js/config/config.js"></script>
@@ -50,7 +55,6 @@
     <script src="js/filter/firstValidPhone.js"></script>
     <script src="js/filter/convertToInAppBrowserLink.js"></script>
     <script src="js/directive/directive.js"></script>
-    <script src="js/directive/ratewidget.js"></script>
     <script src="js/service/service.js"></script>
     <script src="js/service/api.js"></script>
     <script src="js/service/apiPrivateAppStore.js"></script>
@@ -60,6 +64,7 @@
     <script src="js/service/ErrorDomain.js"></script>
     <script src="js/service/loading.js"></script>
     <script src="js/service/SemanticVersion.js"></script>
+    <script src="js/service/RateWidget.js"></script>
     <script src="js/service/u.js"></script>
     <script src="js/value.js"></script>
 </head>
