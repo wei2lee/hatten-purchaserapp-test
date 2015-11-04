@@ -22,7 +22,7 @@
             <small>Filters: {{filter.toString()}}</small>
         </div>
         <div ng-if="getShowNoResultsFound()" class="ion-content-noresultsfound-container">
-            <strong class="ion-content-noresultsfound">No Results Found.</strong>
+            <strong class="ion-content-noresultsfound">No Properties Found.</strong>
         </div>
         <div ng-if="getShowLoading()" class="ion-content-loading-container">
             <strong class="ion-content-loading">Loading...</strong>
@@ -42,7 +42,7 @@
                     </div>
                 </div>
                 <div class="item item-icon-right">
-                    <p>{{item.Name}}</p>
+                    <p><b>{{item.Name}}</b></p>
                     <small class="block-nowrap-ellipsis font-size-75">
                         {{item.Location}}
                     </small>

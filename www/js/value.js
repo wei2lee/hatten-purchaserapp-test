@@ -10,6 +10,8 @@
         privateAppStoreApiEndPoint:'http://infradigital.com.my/appstore/cms/resources/',
         apiEndPoint:'http://103.9.149.59:8034/api/',
         authorizateApiEndPoint:'http://103.9.149.59:8034/',
+//        apiEndPoint:'http://103.9.149.59:6080/api/',
+//        authorizateApiEndPoint:'http://103.9.149.59:6080/',
         resourceEndPoint:'http://103.9.149.59:8034/data/HATT/',
         apiUserUsername:'90731C01@hatt',
         apiUserPassword:'F2568907B18C',
@@ -20,6 +22,7 @@
         placeholderAvatarXS: 'img/placeholder_people_sm.png',
         collectionRepeatCardBottomMarginLarge: 20,
         collectionRepeatCardBottomMarginSmall: 10,
+        collectionRepeatDividerHeight: 38,
         collectionRepeatCardLargeImageRatioLG:{
             ratio:1.66,
             width:1024

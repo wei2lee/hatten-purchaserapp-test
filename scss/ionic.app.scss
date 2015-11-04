@@ -18,7 +18,7 @@ $light-theme-bg-color:#fafafa;
 $light-theme-text-color:#ccc;
 //$card-box-shadow:0 1px 15px rgba(0, 0, 0, .6) !default;
 
-
+ 
 
 @import "www/lib/ionic/scss/ionic";
 
@@ -78,8 +78,5 @@ ion-list, .list.card {
     }
 }
 
-
-
-    
-
+@import "content/eventsbase";
 @import "content/locationbase";

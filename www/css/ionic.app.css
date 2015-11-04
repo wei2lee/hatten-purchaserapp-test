@@ -10616,6 +10616,9 @@ img.img-full-responsive {
   overflow-x: hidden;
   text-overflow: ellipsis; }
 
+.inline-block {
+  display: inline-block; }
+
 .wrap {
   white-space: normal; }
 
@@ -10889,6 +10892,56 @@ ion-list .item.item-image > div, .list.card .item.item-image > div {
 ion-list .item.item-icon-right .icon-left-border, .list.card .item.item-icon-right .icon-left-border {
   border-left: solid 1px #dddddd;
   padding-left: 10px; }
+
+#events .timeelapse-container-top {
+  background-color: #fff;
+  color: #444;
+  font-size: 20px;
+  line-height: 1.2em; }
+  #events .timeelapse-container-top small {
+    line-height: 1em;
+    font-size: 12px; }
+  #events .timeelapse-container-top .countdown .countdown-day {
+    font-family: 'Lato', sans-serif;
+    font-size: 37px;
+    line-height: 1em; }
+  #events .timeelapse-container-top .countdown .countdown-time {
+    font-size: 16px;
+    line-height: 1em; }
+
+#events .timeelapse-container {
+  position: relative;
+  display: inline-block;
+  width: 100%; }
+  #events .timeelapse-container .timeelapse {
+    position: absolute;
+    text-decoration: none;
+    color: white;
+    top: 6%;
+    text-align: center;
+    width: 100%;
+    font-size: 18px; }
+    @media screen and (min-width: 456px) {
+      #events .timeelapse-container .timeelapse {
+        font-size: 21.6px; } }
+    @media screen and (min-width: 547.2px) {
+      #events .timeelapse-container .timeelapse {
+        font-size: 25.92px; } }
+    @media screen and (min-width: 656.64px) {
+      #events .timeelapse-container .timeelapse {
+        font-size: 31.104px; } }
+    @media screen and (min-width: 787.74px) {
+      #events .timeelapse-container .timeelapse {
+        font-size: 37.314px; } }
+    @media screen and (min-width: 945.44px) {
+      #events .timeelapse-container .timeelapse {
+        font-size: 44.784px; } }
+    @media screen and (min-width: 1134.3px) {
+      #events .timeelapse-container .timeelapse {
+        font-size: 53.73px; } }
+    @media screen and (min-width: 1361.54px) {
+      #events .timeelapse-container .timeelapse {
+        font-size: 64.494px; } }
 
 .iframe-container {
   -webkit-overflow-scrolling: touch !important;

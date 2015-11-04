@@ -18,13 +18,14 @@
                 }
             }  
         })
+        $scope.getShowLoading = function() {
+            return (!!$scope.loadingItem || !!$scope.loadingRate) && $scope.item == null;
+        }
+        
         $scope.loadItem = function(useCache) {
             return $scope.loadingItem = 
             apiProject.useCache(useCache).get(u.$state.params.id).then(function(data){
                 $scope.item = data; 
-                u.$timeout(function(){
-                    u.$ionicScrollDelegate.resize();
-                },100)
             }).finally(function(){
                 $scope.loadingItem = null;
             });

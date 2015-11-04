@@ -67,9 +67,6 @@
                 $scope.projects = data;
             }).finally(function(){
                 $scope.loading = null;
-                u.$timeout(function(){
-                    u.$ionicScrollDelegate.resize();
-                },100);
             });
             return $scope.loading;
         }

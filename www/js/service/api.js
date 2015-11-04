@@ -431,26 +431,31 @@
         function api() {}
         api.prototype = new apiBase();
         api.prototype.query = function () {
-            return $http.get(App.apiEndPoint + 'WhatNews/GetAllWhatNews');
+            return this.httpget(App.apiEndPoint + 'WhatNews/GetAllWhatNews').then(function(data){
+                return _.map(data, function(o){
+                        o.RoadShow._startDate = o.RoadShow.StartDate ? new Date(o.RoadShow.StartDate) : null;
+                        o.RoadShow._endDateTime = o.RoadShow.EndDateTime ? new Date(o.RoadShow.EndDateTime) : null;
+                        var _start = o.RoadShow.StartDate ? moment(o.RoadShow.StartDate) : null;
+                        _start = _start ? _start.format('D') : '';
+                        var _end = o.RoadShow.EndDateTime ? moment(o.RoadShow.EndDateTime) : null;
+                        _end = _end ? _end.format('D MMM YYYY') : '';
+                        o._period = _start + '-' + _end;
+                        return o;
+                    }); 
+            });
         }
         api.prototype.get = function (id) {
-            return $http.get(App.apiEndPoint + sprintf('WhatNews/GetWhatNewsById?eventid=%s', id));
+            return this.httpget(App.apiEndPoint + sprintf('WhatNews/GetWhatNewsById?eventid=%s', id));
         }
         api.prototype.attemp = function (data) {
-            return $http.get(App.apiEndPoint + sprintf('Rate/AttendEvent?iEventId=%s&iCustomerID=%s', data.Event.EventId, data.Customer.CustomerId));
+            return this.httpget(App.apiEndPoint + sprintf('Rate/AttendEvent?iEventId=%s&iCustomerID=%s', data.Event.EventId, data.Customer.CustomerId));
         }
         api.prototype.unattemp = function (data) {
-            return $http.get(App.apiEndPoint + sprintf('Rate/UnAttendEvent?iEventId=%s&iCustomerID=%s', data.Event.EventId, data.Customer.CustomerId));
-        }
-        api.prototype.attemp = function (data) {
-            return $http.get(App.apiEndPoint + sprintf('Rate/AttendEvent?iEventId=%s&iCustomerID=%s', data.Event.EventId, data.Customer.CustomerId));
-        }
-        api.prototype.unattemp = function (data) {
-            return $http.get(App.apiEndPoint + sprintf('Rate/UnAttendEvent?iEventId=%s&iCustomerID=%s', data.Event.EventId, data.Customer.CustomerId));
+            return this.httpget(App.apiEndPoint + sprintf('Rate/UnAttendEvent?iEventId=%s&iCustomerID=%s', data.Event.EventId, data.Customer.CustomerId));
         }
         api.prototype.getRate = function (where) {
-            if (where.hasOwnProperty('Customer'))
-                return $http.get(App.apiEndPoint + sprintf('Rate/GetEventRate?iEventId=%s&iCustomerID=%s', where.Event.EventId, where.Customer.CustomerId));
+            if (where.Customer)
+                return this.httpget(App.apiEndPoint + sprintf('Rate/GetEventRate?iEventId=%s&iCustomerID=%s', where.Event.EventId, where.Customer.CustomerId));
             else
                 return this.get(where.Event.EventId).then(function (data) {
                     return {
@@ -466,7 +471,7 @@
                 });
         }
         api.prototype.saveRate = function (id) {
-            return $http.save(App.apiEndPoint + sprintf('Rate/UpdateEventRate?iEventId=%s&iCustomerID=%s&iRateValue=%s', data.Event.EventId, data.Customer.CustomerId, data.rateValue));
+            return this.httpget(App.apiEndPoint + sprintf('Rate/UpdateEventRate?iEventId=%s&iCustomerID=%s&iRateValue=%s', data.Event.EventId, data.Customer.CustomerId, data.rateValue));
         }
         return new api();
     })
@@ -475,14 +480,31 @@
         function api() {}
         api.prototype = new apiBase();
         api.prototype.query = function () {
-            return $http.get(App.apiEndPoint + 'WhatNews/GetAllVoucher');
+            return this.httpget(App.apiEndPoint + 'WhatNews/GetAllVoucher').then(function(data){
+                return _.map(data, function(o){
+                        o.RoadShow._startDate = o.RoadShow.StartDate ? new Date(o.RoadShow.StartDate) : null;
+                        o.RoadShow._endDateTime = o.RoadShow.EndDateTime ? new Date(o.RoadShow.EndDateTime) : null;
+                        var _start = o.RoadShow.StartDate ? moment(o.RoadShow.StartDate) : null;
+                        _start = _start ? _start.format('D') : '';
+                        var _end = o.RoadShow.EndDateTime ? moment(o.RoadShow.EndDateTime) : null;
+                        _end = _end ? _end.format('D MMM YYYY') : '';
+                        o._period = _start + '-' + _end;
+                        return o;
+                    }); 
+            });
         }
         api.prototype.get = function (id) {
-            return $http.get(App.apiEndPoint + sprintf('WhatNews/GetWhatNewsById?eventid=%s', id));
+            return this.httpget(App.apiEndPoint + sprintf('WhatNews/GetWhatNewsById?eventid=%s', id));
+        }
+        api.prototype.attemp = function (data) {
+            return this.httpget(App.apiEndPoint + sprintf('Rate/AttendEvent?iEventId=%s&iCustomerID=%s', data.Event.EventId, data.Customer.CustomerId));
+        }
+        api.prototype.unattemp = function (data) {
+            return this.httpget(App.apiEndPoint + sprintf('Rate/UnAttendEvent?iEventId=%s&iCustomerID=%s', data.Event.EventId, data.Customer.CustomerId));
         }
         api.prototype.getRate = function (where) {
-            if (where.hasOwnProperty('Customer'))
-                return $http.get(App.apiEndPoint + sprintf('Rate/GetEventRate?iEventId=%s&iCustomerID=%s', where.Event.EventId, where.Customer.CustomerId));
+            if (where.Customer)
+                return this.httpget(App.apiEndPoint + sprintf('Rate/GetEventRate?iEventId=%s&iCustomerID=%s', where.Event.EventId, where.Customer.CustomerId));
             else
                 return this.get(where.Event.EventId).then(function (data) {
                     return {
@@ -498,7 +520,7 @@
                 });
         }
         api.prototype.saveRate = function (id) {
-            return $http.save(App.apiEndPoint + sprintf('Rate/UpdateEventRate?iEventId=%s&iCustomerID=%s&iRateValue=%s', data.Event.EventId, data.Customer.CustomerId, data.rateValue));
+            return this.httpget(App.apiEndPoint + sprintf('Rate/UpdateEventRate?iEventId=%s&iCustomerID=%s&iRateValue=%s', data.Event.EventId, data.Customer.CustomerId, data.rateValue));
         }
         return new api();
     })
@@ -509,8 +531,8 @@
         api.prototype.query = function () {
             return this.httpget(App.apiEndPoint + 'WhatNews/GetAllEvent').then(function(data){
                 return _.map(data, function(o){
-                        o.RoadShow._startDate = o.RoadShow.StartDate ? new Date(o.RoadShow.StartDate).getTime()/1000 : null;
-                        o.RoadShow._endDateTime = o.RoadShow.EndDateTime ? new Date(o.RoadShow.EndDateTime).getTime()/1000 : null;
+                        o.RoadShow._startDate = o.RoadShow.StartDate ? new Date(o.RoadShow.StartDate) : null;
+                        o.RoadShow._endDateTime = o.RoadShow.EndDateTime ? new Date(o.RoadShow.EndDateTime) : null;
                         var _start = o.RoadShow.StartDate ? moment(o.RoadShow.StartDate) : null;
                         _start = _start ? _start.format('D') : '';
                         var _end = o.RoadShow.EndDateTime ? moment(o.RoadShow.EndDateTime) : null;

@@ -1,59 +1,63 @@
-<ion-view title="Event" id="event">
+<ion-view id="event">
+    <ion-nav-title>
+      {{title}}
+    </ion-nav-title>
     <ion-content >
         <ion-refresher pulling-text="Pull to refresh" on-refresh="actionRefresh()">
         </ion-refresher>
-        <div class="list card">
-
-            <div class="item padding-0">
-                <img preloadThumb class="full-img-responsive" ng-src="{{item.RoadShow.EventLargePhotoResourceKey | relativeResource}}">
-                <p class="padding">
-                    {{item.Name}}
-                </p>
-            </div>
+        <div ng-if="getShowNoResultsFound()" class="ion-content-noresultsfound-container">
+            <strong class="ion-content-noresultsfound">No Event Found.</strong>
         </div>
-        <div class="list card learn-more-container" ng-class="{'tooshort':learnmoretooshort, 'expanded':expanded}" ng-if="item.RoadShow.Visible4">
-            <div class="item-body" ng-bind-html="item.RoadShow.EventTemplate | convertToInAppBrowserLink">
-            </div>
-            <button class="learn-more-button button button-full button-positive footer-button" ng-click="learnmore()">
-                LEARN MORE
-            </button>
-            <div class="learn-more-overlay"></div>
+        <div ng-if="getShowLoading()" class="ion-content-loading-container">
+            <strong class="ion-content-loading">Loading...</strong>
         </div>
-        <div class="list card" ng-if="item.RoadShow.Visible3">
-
-            <div class="item padding-0" ng-click="actionMap()">
-                <div class="responsive-container">
-                    <canvas width=800 height=500></canvas>
-                    <div class="responsive-content">
-                        <div class="iframe-container">
-                            <iframe class="disable-scroll" id='map' width="100%" height="100%" frameborder="0" style="border:0" ng-src="{{mapurl}}" ng-if="mapurl">
-                            </iframe>
-                            <p class="padding" ng-if="!mapurl">Location is not available</p>
+        <div ng-if="item">
+            <div class="list card">
+                <div class="item item-image">
+                    <img class="full-img-responsive" ng-src="{{item.RoadShow.EventLargePhotoResourceKey | relativeResource}}">
+                </div>
+                <div class="item item-text-wrap">
+                    <b>{{item.Name}}</b>
+                </div>
+            </div>
+            <div class="list card" ng-if="item.RoadShow.EventTemplate">
+                <div class="item item-text-wrap" ng-bind-html="item.RoadShow.EventTemplate | convertToInAppBrowserLink">
+                </div>        
+            </div>
+            <div class="list card" ng-if="item.RoadShow.Visible3">
+                <div class="item padding-0" ng-click="actionMap()">
+                    <div class="responsive-container">
+                        <canvas width=800 height=500></canvas>
+                        <div class="responsive-content">
+                            <div class="iframe-container">
+                                <iframe class="disable-scroll" id='map' width="100%" height="100%" frameborder="0" style="border:0" ng-src="{{mapurl}}" ng-if="mapurl">
+                                </iframe>
+                                <p class="padding" ng-if="!mapurl">Location is not available</p>
+                            </div>
                         </div>
                     </div>
                 </div>
+                <div class="item-body padding-right-1-item">
+                    <span>{{item.RoadShow.Venue}}</span>
+                    <span class="item-right">{{item.RoadShow.Distance}}</span>
+                </div>
             </div>
-            <div class="item-body padding-right-1-item">
-                <span>{{item.RoadShow.Venue}}</span>
-                <span class="item-right">{{item.RoadShow.Distance}}</span>
+
+            <div class="padding-horizontal">
+                <button ng-click="actionShare()" class="button button-block button-assertive icon-left ion-android-share-alt">SHARE</a>
             </div>
-        </div>
 
-        <div class="padding-horizontal">
-            <button ng-click="actionShare()" class="button button-block button-assertive icon-left ion-android-share-alt">SHARE</a>
-        </div>
-        
-        <div class="padding-horizontal" ng-if="item.RoadShow.Visible2">
-<!--                Number of Total Attemp : <strong style="font-size:24px">{{item.RoadShow.TotalAttend | number}}</strong>-->
-            <button ng-click="attempEvent(event)" class="button button-block button-balanced icon-left ion-flag">ATTEND EVENT</button>
-        </div>
+            <div class="padding-horizontal" ng-if="item.RoadShow.Visible2">
+                <button ng-click="actionAttemp()" class="button button-block button-balanced icon-left ion-flag">ATTEND EVENT</button>
+            </div>
 
-        <div class="padding-horizontal" ng-if="item.RoadShow.Visible2">
-            <button ng-if="item.RoadShow.Visible1" ng-click="submitReview(event)" class="button button-block button-positive icon-left ion-ios-compose">WRITE A REVIEW</button>
-        </div>
+            <div class="padding-horizontal" ng-if="item.RoadShow.Visible2">
+                <button ng-if="item.RoadShow.Visible1" ng-click="actionReview()" class="button button-block button-positive icon-left ion-ios-compose">WRITE A REVIEW</button>
+            </div>
 
-        <div class="list card padding-md" ng-if="item.RoadShow.Visible1">
-            <rate-widget rate="rate"></rate-widget>
+            <div class="list card padding-md" ng-if="item.RoadShow.Visible1">
+                <rate-widget rate="rate"></rate-widget>
+            </div>
         </div>
         <div class="ion-content-scroll-bottom-filler"></div>
     </ion-content>

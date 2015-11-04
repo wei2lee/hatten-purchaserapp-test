@@ -1,45 +1,70 @@
-<ion-view>
-    <ion-content padding=true>
+<ion-view id="events">
+    <ion-nav-title>
+      {{title}}
+    </ion-nav-title>
+    <ion-content>
         <ion-refresher pulling-text="Pull to refresh" on-refresh="actionRefresh()">
         </ion-refresher>
-        <div class="list card fade-in-animation no-top-gap" ng-repeat="event in events | orderBy:'-EventId'">
-            <div ng-if="event.RoadShow.Visible5" class="item timeelapse-container-top wrap" >
-                <div ng-if="!event._expireRemainFinished">
-                    <span>
-                        <span>{{event.Name}} started in : 
-                            <span class="countdown" style="display:inline-block;">
-                                <span class="countdown-day">{{event._expireRemainDay}}</span>
-                                <span class="countdown-time">{{event._expireRemainTime}}</span>
+        <div ng-if="getShowNoResultsFound()" class="ion-content-noresultsfound-container">
+            <strong class="ion-content-noresultsfound">No Event Found.</strong>
+        </div>
+        <div ng-if="getShowLoading()" class="ion-content-loading-container">
+            <strong class="ion-content-loading">Loading...</strong>
+        </div>
+        <div ng-if="items"
+             ng-class="{'list':!item.isDivider, 
+                       'card':!item.isDivider, 
+                       'fade-in-animation':!item.isDivider, 
+                       'no-top-gap':!item.isDivider, 
+                       'item': item.isDivider, 
+                       'item-divider': item.isDivider, 
+                       'bg-calm': item.isDivider, 
+                       'text-light': item.isDivider}"
+             ng-repeat="item in items">
+            
+            
+            <span ng-if="item.isDivider">{{item.text}}</span>
+            
+            <div ng-if="!item.isDivider">
+                <div ng-if="item.RoadShow.Visible5 && (!item._expireRemainFinished || (item._expireRemainFinished && item._period && item._expireDesc))" class="item timeelapse-container-top wrap" >
+                    <div ng-if="!item._expireRemainFinished">
+                        <span>
+                            <span>{{item.Name}} started in : 
+                                <span class="countdown nowrap">
+                                    <span class="countdown-day">{{item._expireRemainDay}}</span>
+                                    <span class="countdown-time">{{item._expireRemainTime}}</span>
+                                </span>
                             </span>
+                            <br/>
+                            <small>
+                                <span class="nowrap">{{item._period}}</span>
+                            </small>
                         </span>
-                        <br/>
-                        <small>
-                            <span style="display:inline-block">{{event._period}}</span>
-                        </small>
-                    </span>
+                    </div>
+                    <div ng-if="item._expireRemainFinished && item._period && item._expireDesc">
+                        <span ng-if="item._expireRemainFinished">
+                            <span class="nowrap"><b>{{item.Name}}</b></span>
+                            <br/>
+                            <small ng-if="item._period"><span class="nowrap">{{item._period}},</span></small>
+                            <small ng-if="item._expireDesc"><span class="nowrap">{{item._expireDesc}}</span></small>
+                        </span>
+                    </div>
                 </div>
-                <div ng-if="event._expireRemainFinished">
-                    <span ng-if="event._expireRemainFinished">
-                        <span style="display:inline-block">{{event.Name}}</span>
-                        <br/><small><span style="display:inline-block">{{event._period}},</span></small>
-                        <small><span style="display:inline-block">{{event._expireDesc}}</span></small>
-                    </span>
+                <div class="item padding-0 line-height-0">
+                    <a ng-click="actionItemClick($index)" class="timeelapse-container">
+                        <img class="full-image" ng-src="{{item.RoadShow.EventSmallPhotoResourceKey | relativeResource}}">
+                    </a>
                 </div>
+                <div class="item item-icon-right" ng-if="item.RoadShow.Visible6&&item.RoadShow.Visible7">
+                    <span ng-if="item.RoadShow.Visible7" class="font-bold font-size-lg"><b>{{item.Name}}</b></span>&nbsp;
+                    <a ng-if="item.RoadShow.Visible6" ng-click="actionShare(event)">
+                        <i class="icon ion-android-share-alt icon-left-border"></i>
+                    </a>
+                </div>
+                <button ng-click="actionAttemp($index)" ng-if="item.RoadShow.Visible2" class="learn-more-button button button-full button-assertive footer-button  icon-left ion-flag">
+                    ATTEND EVENT
+                </button>
             </div>
-            <div class="item padding-0 line-height-0">
-                <a ng-click="actionClick(event)" class="timeelapse-container">
-                    <img class="full-image" ng-src="{{event.RoadShow.EventSmallPhotoResourceKey | relativeResource}}">
-                </a>
-            </div>
-            <div class="item item-icon-right" ng-if="event.RoadShow.Visible6&&event.RoadShow.Visible7">
-                <span ng-if="event.RoadShow.Visible7" class="font-bold font-size-lg">{{event.Name}}</span>&nbsp;
-                <a ng-if="event.RoadShow.Visible6" ng-click="actionShare(event)">
-                    <i class="icon ion-android-share-alt icon-left-border"></i>
-                </a>
-            </div>
-            <button ng-click="actionAttempEvent(event)" ng-if="event.RoadShow.Visible2" class="learn-more-button button button-full button-assertive footer-button  icon-left ion-flag">
-                ATTEND EVENT
-            </button>
         </div>
         <div class="ion-content-scroll-bottom-filler"></div>
     </ion-content>

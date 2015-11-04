@@ -2,11 +2,14 @@
     var _module = angular.module('controller');
     _module.controller('GalleryBaseCtrl', function ($scope, ControllerBase, u, App) {
         ControllerBase($scope, 'gallery');
-        $scope.$on('$ionicView.afterEnter', function (viewInfo, state) {
+        $scope.$on('$ionicView.beforeEnter', function (viewInfo, state) {
             if(['none','forward','swap'].indexOf(state.direction)>=0) {
                 $scope.items = u.Intent.data;
             }
         });
+        $scope.getShowNoResultsFound = function() {
+            return $scope.items.length==0;
+        }
         $scope.getItemWidth = function(data) {
             var padding = 20;
             return ($scope.$ioncontent.width() - padding) + 'px';

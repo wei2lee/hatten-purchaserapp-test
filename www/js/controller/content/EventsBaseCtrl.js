@@ -1,11 +1,32 @@
 (function () {
     var _module = angular.module('controller');
-    _module.controller('EventsBaseCtrl',function($scope,ControllerBase,apiEvent,u,App){
+    _module.controller('EventsBaseCtrl',function($scope,ControllerBase,apiEvent,apiVoucher,apiWhatsNew,u,App){
         ControllerBase($scope, 'events');
         $scope.loadingEvent = null;
+        $scope.states = {
+            'app.events': {
+                title: 'Events',
+                api: apiEvent,
+                detailstatename: 'app.event'
+            },
+            'app.vouchers': {
+                title: 'Vouchers',
+                api: apiVoucher,
+                detailstatename: 'app.voucher'
+            },
+            'app.whatsnews': {
+                title: 'What\'s News',
+                api: apiWhatsNew,
+                detailstatename: 'app.whatsnew'
+            }
+        }
+        
+        
         $scope.$on('$ionicView.beforeEnter', function(viewInfo, state){
             if(['none','forward','swap'].indexOf(state.direction)>=0) {
                 $scope.loadingEvent = null;
+                $scope.title = $scope.states[u.$state.current.name].title;
+                $scope.api = $scope.states[u.$state.current.name].api;
                 $scope.loadEvent().then(function(){
                     $scope.killTimer();
                     $scope.createTimer();  
@@ -18,13 +39,47 @@
         $scope.$on('$ionicView.afterLeave', function (viewInfo, state) {
             $scope.killTimer();
         });
+        
+        $scope.getShowLoading = function() {
+            return (!!$scope.loadingEvent) && $scope.items == null;
+        }
+        
         $scope.loadEvent = function(useCache) {
             return $scope.loadingEvent = 
-                apiEvent.useCache(useCache).query().then(function(data){
+                $scope.api.useCache(useCache).query().then(function(data){
                     $scope.events = data;
+                    $scope.updateDivider();
                 }).finally(function(){
                     $scope.loadingEvent = null;
                 });
+        }
+        $scope.updateDivider = function() {
+            var sortBy = _.sortBy($scope.events, function(o){
+                return o.RoadShow._startDate ? new Date(o.RoadShow._startDate) : null;
+            });
+            sortBy.reverse();
+            var groupBy = _.groupBy(sortBy, function(o){
+                if(o.RoadShow._startDate) {
+                    
+                    return moment(o.RoadShow._startDate).format('YYYY MMMM');
+                }else{
+                    return 'Past';
+                }
+            });
+            var items = [];
+            for(k in groupBy) {
+                if(k == 'Past') {
+                    if(Object.keys(groupBy).length > 1)
+                        items.push({isDivider: true, text: k });
+                }else{
+                    items.push({isDivider: true, text: k })    
+                }
+                for(j in groupBy[k]) {
+                    items.push(groupBy[k][j]);
+                }
+            }
+            
+            $scope.items = items;
         }
         $scope.actionRefresh = function() {
             if($scope.loadingEvent)return;
@@ -38,7 +93,7 @@
         $scope.actionItemClick = function(index) {
             var item = $scope.items[index];
             u.Intent.data = item;
-            u.$state.go('app.event', {id: item.ProjectId});
+            u.$state.go('app.event', {id: item.EventId});
         }
         
         $scope.createTimer = function() {
@@ -52,8 +107,8 @@
             for(i = 0 ; i < $scope.events.length ; i++) {
                 var _new = $scope.events[i];
 
-                var start = _new.RoadShow._startDate;
-                var end = _new.RoadShow._endDateTime;
+                var start = _new.RoadShow._startDate ? _new.RoadShow._startDate.getTime()/1000 : null;
+                var end = _new.RoadShow._endDateTime ? _new.RoadShow._endDateTime.getTime()/1000 : null;
 
 
                 var now = new Date().getTime()/1000;   
@@ -72,8 +127,10 @@
                     _new._expireDesc = "Event is ended.";
                 }else if(start && now > start){
                     _new._expireDesc = "Event is started!";
-                }else{
+                }else if(start && now){
                     _new._expireDesc = "Event is coming!!";
+                }else{
+                    _new._expireDesc = "";
                 }
                 _new._expireRemainFinished = !(dd || hh || mi || ss);
             }
@@ -82,12 +139,10 @@
             u.$interval.cancel($scope.timer);
         }
         
-        $scope.actionClick = function(item) {
+        $scope.actionItemClick = function(index) {
+            var item = $scope.items[index];
             u.Intent.data = item;
-            u.$state.go('app.event', {id: item.EventId});
+            u.$state.go($scope.states[u.$state.current.name].detailstatename, {id: item.EventId});
         }
-
-        
-
     })
 }());

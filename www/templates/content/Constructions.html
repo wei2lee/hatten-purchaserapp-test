@@ -1,0 +1,37 @@
+<ion-view title="Constructions" id="constructions">
+    <ion-content class="has-header">
+        <ion-refresher pulling-text="Pull to refresh" on-refresh="actionRefresh()">
+        </ion-refresher>
+        <div ng-if="getShowNoResultsFound()" class="ion-content-noresultsfound-container">
+            <strong class="ion-content-noresultsfound">No Constructions Found.</strong>
+        </div>
+        <div ng-if="getShowLoading()" class="ion-content-loading-container">
+            <strong class="ion-content-loading">Loading...</strong>
+        </div>
+        <ion-list>
+            <div collection-repeat="item in items" 
+                 item-render-buffer="2"
+                 item-width="getItemWidth($index, false)" 
+                 item-height="getItemHeight($index, true)"
+                 ng-style="{height: getItemHeight($index, false), left:0, right:0}"
+                 ng-click="actionItemClick($index)"
+                 ng-class="{'card': !item.isDivider, 'item': item.isDivider, 'item-divider': item.isDivider, 'bg-calm': item.isDivider, 'text-light': item.isDivider }"
+                 >
+                
+                <span ng-if="item.isDivider">{{item.text}}</span>
+                
+                <div ng-if="!item.isDivider" class="item item-image">
+                    <div tiny-background-image-lowres='{{item.ProjectContractionResourceKey}}' 
+                         tiny-background-image-hires='{{item.ProjectContractionResourceKey}}' 
+                         ng-style="{width: getImageWidth($index), height: getImageHeight($index), 'background-image':'url('+(item.ProjectContractionResourceKey | relativeResource)+')'}">
+                    </div>
+                </div>
+                <div ng-if="!item.isDivider" class="item item-icon-right" ng-if="item.ProjectContractionDate">
+                    <p>Photo taken at {{item.ProjectContractionDate | date : 'MMM dd, yyyy'}}</p>
+                </div>
+
+            </div>
+        </ion-list>
+        <div class="ion-content-scroll-bottom-filler"></div>
+    </ion-content>
+</ion-view>

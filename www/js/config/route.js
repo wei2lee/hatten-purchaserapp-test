@@ -10,12 +10,22 @@
             controller: 'AppCtrl'
         })
 
-        .state('app.whatsnew', {
-                url: '/whatsnew',
+        .state('app.whatsnews', {
+                url: '/whatsnews',
                 views: {
                     'menuContent': {
                         templateUrl: 'templates/content/eventsbase.html',
-                        controller: 'WhatsNewCtrl'
+                        controller: 'EventsBaseCtrl'
+                    }
+                }
+            })
+        
+        .state('app.whatsnew', {
+                url: '/whatsnew/{id}',
+                views: {
+                    'menuContent': {
+                        templateUrl: 'templates/content/eventbase.html',
+                        controller: 'EventBaseCtrl'
                     }
                 }
             })
@@ -80,12 +90,22 @@
                 }
             })
         
-        .state('app.construction-projects', {
-                url: '/construction-projects',
+        .state('app.constructions-query-project', {
+                url: '/constructions/query/project/{id}',
                 views: {
                     'menuContent': {
-                        templateUrl: 'templates/content/ProjectSmalls.html',
-                        controller: 'ConstructionProjectsCtrl'
+                        templateUrl: 'templates/content/Constructions.html',
+                        controller: 'ConstructionsCtrl'
+                    }
+                }
+            })
+        
+        .state('app.construction', {
+                url: '/construction',
+                views: {
+                    'menuContent': {
+                        templateUrl: 'templates/content/Construction.html',
+                        controller: 'ConstructionCtrl'
                     }
                 }
             })
@@ -116,7 +136,17 @@
                 views: {
                     'menuContent': {
                         templateUrl: 'templates/content/EventsBase.html',
-                        controller: 'VouchersCtrl'
+                        controller: 'EventsBaseCtrl'
+                    }
+                }
+            })
+        
+        .state('app.voucher', {
+                url: '/voucher/{id}',
+                views: {
+                    'menuContent': {
+                        templateUrl: 'templates/content/EventBase.html',
+                        controller: 'EventBaseCtrl'
                     }
                 }
             })
